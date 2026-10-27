@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+<p class="eyebrow">
+<span class="tiny-square">
+</span> ТВОЯ КОМАНДА. ТВОЯ ИГРА.</p>
+<h1>Всё начинается<br>с <span>первого матча.</span>
+</h1>
+<p class="hero-description">Турниры, команды и результаты — в одном месте.<br>Следи за игрой и поддерживай своих.</p>
+<a class="button primary" href="{% url 'tournament_list' %}">Смотреть турниры <span aria-hidden="true">↗</span>
+</a>
+<div class="hero-note">
+<span class="line">
+</span> Студенческая лига / сезон 2026</div>
+</div>
+  <a class="featured" href="{% url 'tournament_detail' featured.slug %}" aria-label="Открыть IGNITE CUP">
+    <div class="featured-head">
+<span class="badge live">
+<i>
+</i>Идёт матч</span>
+<span>CS2 / BO3</span>
+</div>
+    <div class="featured-title">
+<p class="eyebrow">ГЛАВНЫЙ МАТЧ ДНЯ</p>
+<h2>IGNITE CUP</h2>
+<p>Финал · 23 октября · 18:00</p>
+</div>
+    <div class="scoreboard">
+<div>
+<span class="team-emblem lime">PT</span>
+<strong>POLYTECH</strong>
+</div>
+<div class="big-score">{{ final.score_a }}<span>:</span>{{ final.score_b }}<small>СЧЁТ ПО КАРТАМ</small>
+</div>
+<div>
+<span class="team-emblem coral">RP</span>
+<strong>RED PIXELS</strong>
+</div>
+</div>
+    <div class="featured-foot">
+<span>Кто заберёт первый кубок?</span>
+<span>К турниру ↗</span>
+</div>
+  </a>
+</section>
+<div class="stats-strip">
+<div>
+<strong>03</strong>
+<span>турнира в сезоне</span>
+</div>
+<div>
+<strong>04</strong>
+<span>команды в каждом</span>
+</div>
+<div>
+<strong>03</strong>
+<span>игровые дисциплины</span>
+</div>
+<p>Играй за свою команду.<br>
+<strong>Болей за своих.</strong>
+</p>
+</div>
+<section class="section">
+<div class="section-heading">
+<div>
+<p class="eyebrow">ВЫБИРАЙ СВОЮ ИГРУ</p>
+<h2>На арене</h2>
+</div>
+<a class="text-link" href="{% url 'tournament_list' %}">Все турниры <span aria-hidden="true">↗</span>
+</a>
+</div>
+<div class="cards">{% for t in tournaments %}{% include 'includes/tournament_card.html' %}{% endfor %}</div>
+</section>
+<aside class="demo-notice">
+<span class="notice-icon" aria-hidden="true">i</span>
+<div>
+<strong>Первый раунд — знакомство.</strong>
+<p>Это учебная демоверсия. Турниры, команды и результаты подготовлены для показа возможностей сайта.</p>
+</div>
+<span class="version">23.10 / v0.1</span>
+</aside>
+{% endblock %}

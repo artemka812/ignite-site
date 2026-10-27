@@ -1,0 +1,23 @@
+<article class="tournament-card {{ t.accent }}">
+  <div class="card-art">
+<span class="art-grid">
+</span>
+<span class="game-mark">{% if t.game == 'CS2' %}CS<span>2</span>{% elif t.game == 'DOTA2' %}DOTA<span>2</span>{% else %}V<span>AL</span>{% endif %}</span>
+<span class="edition">SEASON 2026 / {{ t.edition }}</span>
+<span class="badge {{ t.status }}">{% if t.status == 'live' %}<i>
+</i>{% endif %}{{ t.status_label }}</span>
+</div>
+  <div class="card-body">
+<p class="eyebrow">{{ t.game_label }}</p>
+<h3>
+<a href="{% url 'tournament_detail' t.slug %}">{{ t.name }} <span aria-hidden="true">↗</span>
+</a>
+</h3>
+<p class="card-description">{{ t.subtitle }}</p>
+<div class="card-meta">
+<span>{{ t.short_date }} · 2026</span>
+<span>4 команды</span>
+<span>5 × 5</span>
+</div>
+</div>
+</article>

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %}{{ tournament.name }} — IGNITE{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+<a href="{% url 'tournament_list' %}">Турниры</a>
+<span>/</span>
+<span>{{ tournament.name }}</span>
+</div>
+<section class="tournament-hero {{ tournament.accent }}">
+<div>
+<div class="tournament-kicker">
+<span class="eyebrow">{{ tournament.game_label }} / СЕЗОН 2026</span>
+<span class="badge {{ tournament.status }}">{% if tournament.status == 'live' %}<i>
+</i>{% endif %}{{ tournament.status_label }}</span>
+</div>
+<h1>{{ tournament.name }}</h1>
+<p>{{ tournament.description }}</p>
+<div class="tournament-facts">
+<span>{{ tournament.date }}</span>
+<span>4 команды · 5 × 5</span>
+<span>Олимпийская система</span>
+<span>Все матчи BO3</span>
+</div>
+</div>
+<span class="hero-number" aria-hidden="true">{{ tournament.edition }}</span>
+</section>
+<nav class="section-nav" aria-label="Разделы турнира">
+<a href="#bracket">Турнирная сетка <span>01</span>
+</a>
+<a href="#schedule">Расписание <span>02</span>
+</a>
+<a href="#teams">Команды <span>03</span>
+</a>
+<a href="#rules">Правила <span>04</span>
+</a>
+</nav>
+<section class="section" id="bracket">
+<div class="section-heading">
+<div>
+<p class="eyebrow">ПУТЬ К КУБКУ</p>
+<h2>Турнирная сетка</h2>
+</div>
+<span class="muted">Single elimination</span>
+</div>
+<div class="bracket-scroll" tabindex="0" role="region" aria-label="Сетка турнира с горизонтальной прокруткой">
+<div class="bracket">
+<div class="bracket-round">
+<p class="round-label">ПОЛУФИНАЛЫ <span>2 матча</span>
+</p>{% for match in matches %}{% if not forloop.last %}<article class="match-card">
+<div class="match-heading">
+<span>{{ match.round }}</span>
+<span>{{ match.time }}</span>
+</div>
+<div class="team-row {% if match.winner == match.a.name %}winner{% endif %}">
+<span class="mini-emblem {{ match.a.color }}">{{ match.a.tag }}</span>
+<strong>{{ match.a.name }}</strong>
+<b>{{ match.score_a }}</b>
+</div>
+<div class="team-row {% if match.winner == match.b.name %}winner{% endif %}">
+<span class="mini-emblem {{ match.b.color }}">{{ match.b.tag }}</span>
+<strong>{{ match.b.name }}</strong>
+<b>{{ match.score_b }}</b>
+</div>
+<p class="match-status">{{ match.status }}</p>
+</article>{% endif %}{% endfor %}</div>
+<div class="bracket-connector" aria-hidden="true">
+<span>
+</span>
+</div>
+<div class="bracket-round final-round">
+<p class="round-label">ФИНАЛ <span>1 матч</span>
+</p>{% with match=matches.2 %}<article class="match-card final-card">
+<div class="match-heading">
+<span>Финал · BO3</span>
+<span>{{ match.time }}</span>
+</div>
+<div class="team-row {% if match.winner == match.a.name %}winner{% endif %}">
+<span class="mini-emblem {{ match.a.color|default:'neutral' }}">{{ match.a.tag|default:'?' }}</span>
+<strong>{{ match.a.name|default:'Победитель полуфинала 1' }}</strong>
+<b>{{ match.score_a }}</b>
+</div>
+<div class="team-row {% if match.winner == match.b.name %}winner{% endif %}">
+<span class="mini-emblem {{ match.b.color|default:'neutral' }}">{{ match.b.tag|default:'?' }}</span>
+<strong>{{ match.b.name|default:'Победитель полуфинала 2' }}</strong>
+<b>{{ match.score_b }}</b>
+</div>
+<p class="match-status {% if tournament.status == 'live' %}accent{% endif %}">{{ match.status }}</p>
+</article>{% endwith %}</div>
+<div class="bracket-prize">
+<span aria-hidden="true">♜</span>
+<p>ПОБЕДИТЕЛЬ</p>
+<strong>{% if tournament.status == 'finished' %}POLYTECH{% else %}Кубок ждёт{% endif %}</strong>
+</div>
+</div>
+</div>
+<p class="hint">Демонстрационная сетка. Результаты подготовлены заранее.</p>
+</section>
+<section class="section" id="schedule">
+<div class="section-heading">
+<div>
+<p class="eyebrow">НЕ ПРОПУСТИ ИГРУ</p>
+<h2>Расписание матчей</h2>
+</div>
+<span class="muted">{{ tournament.date }} · МСК</span>
+</div>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Расписание с горизонтальной прокруткой">
+<table>
+<caption class="sr-only">Расписание {{ tournament.name }}, время московское</caption>
+<thead>
+<tr>
+<th scope="col">Время</th>
+<th scope="col">Этап</th>
+<th scope="col">Встреча</th>
+<th scope="col">Счёт</th>
+<th scope="col">Статус</th>
+</tr>
+</thead>
+<tbody>{% for match in matches %}<tr>
+<td class="time-cell">{{ match.time }}</td>
+<td>{{ match.round }}</td>
+<td>
+<strong>{{ match.a.name|default:'Победитель ПФ 1' }}</strong>
+<span class="versus">vs</span>
+<strong>{{ match.b.name|default:'Победитель ПФ 2' }}</strong>
+</td>
+<td class="table-score">{{ match.score_a }} : {{ match.score_b }}</td>
+<td>
+<span class="table-status {% if match.status == 'Идёт матч' %}accent{% endif %}">{{ match.status }}</span>
+</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+</section>
+<section class="section" id="teams">
+<div class="section-heading">
+<div>
+<p class="eyebrow">ЛИЦА ТУРНИРА</p>
+<h2>Участники</h2>
+</div>
+<span class="muted">4 / 4 команды</span>
+</div>
+<div class="teams-grid">{% for team in teams %}<article class="team-card">
+<span class="team-emblem {{ team.color }}">{{ team.tag }}</span>
+<h3>{{ team.name }}</h3>
+<p>Капитан: <strong>{{ team.captain }}</strong>
+</p>
+<details>
+<summary>Состав команды <span aria-hidden="true">+</span>
+</summary>
+<p>{{ team.players }}</p>
+</details>
+</article>{% endfor %}</div>
+</section>
+<section class="rules section" id="rules">
+<div>
+<p class="eyebrow">ПЕРЕД СТАРТОМ</p>
+<h2>Коротко о правилах</h2>
+</div>
+<ol>
+<li>В турнире участвуют четыре команды по пять игроков.</li>
+<li>Поражение завершает участие команды в турнире. Победители полуфиналов встречаются в финале.</li>
+<li>Все встречи проходят до двух побед по картам — BO3.</li>
+<li>Время в расписании указано по Москве. Участникам нужно быть готовыми за 15 минут до матча.</li>
+</ol>
+</section>
+{% endblock %}

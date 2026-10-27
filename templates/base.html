@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="IGNITE — студенческие киберспортивные турниры. Команды, сетки, расписание и результаты матчей.">
+  <title>{% block title %}IGNITE — студенческий киберспорт{% endblock %}</title>
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="{% url 'home' %}" aria-label="IGNITE — главная">
+<svg viewBox="0 0 32 36" aria-hidden="true">
+<path d="M18 0 1 21h12l-2 15 20-23H18z" fill="currentColor"/>
+</svg>IGNITE<span class="brand-dot">.</span>
+</a>
+      <nav aria-label="Основное меню">
+        <a href="{% url 'home' %}" {% if active_page == 'home' %}aria-current="page"{% endif %}>Главная</a>
+        <a href="{% url 'tournament_list' %}" {% if active_page == 'tournaments' %}aria-current="page"{% endif %}>Турниры</a>
+      </nav>
+      <span class="demo-tag">
+<span>
+</span>Демо 0.1</span>
+    </div>
+  </header>
+  <main id="main" class="container">{% block content %}{% endblock %}</main>
+  <footer class="footer">
+<div class="container footer-inner">
+<a class="brand small" href="{% url 'home' %}">IGNITE<span class="brand-dot">.</span>
+</a>
+<p>Студенческий киберспорт. Начало большого пути.</p>
+<span>Учебный проект · 2026</span>
+</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}{% block title %}{{ match.team_a.name|default:'Матч' }} — {{ match.team_b.name|default:'IGNITE' }}{% endblock %}{% block content %}<div class="breadcrumbs">
+<a href="{{ match.tournament.get_absolute_url }}">{{ match.tournament.name }}</a>
+<span>/</span>Раунд {{ match.round }} · матч {{ match.position }}</div>
+<section class="match-heading-panel" data-match-state="{% url 'match_state' match.pk %}">
+<div class="section-heading">
+<span class="badge {{ match.status }}" data-live-status>{{ match.get_status_display }}</span>
+<span class="subtle">BO{{ match.best_of }} · {{ match.scheduled_at|date:'d.m.Y H:i'|default:'Время не назначено' }} МСК</span>
+</div>
+<div class="scoreboard">
+<div>
+<span class="avatar large">{{ match.team_a.tag|default:'?' }}</span>{% if match.team_a %}<a href="{{ match.team_a.get_absolute_url }}">{{ match.team_a.name }}</a>{% else %}<span>Ожидается соперник</span>{% endif %}</div>
+<div class="match-score">{% if match.is_bye %}<span class="bye-label">Проход<br>без игры</span>{% else %}<span data-score-a>{{ match.score_a|default_if_none:'—' }}</span>
+<span class="colon">:</span>
+<span data-score-b>{{ match.score_b|default_if_none:'—' }}</span>{% endif %}</div>
+<div>
+<span class="avatar large">{{ match.team_b.tag|default:'?' }}</span>{% if match.team_b %}<a href="{{ match.team_b.get_absolute_url }}">{{ match.team_b.name }}</a>{% else %}<span>{% if match.is_bye %}Без соперника{% else %}Ожидается соперник{% endif %}</span>{% endif %}</div>
+</div>{% if can_manage %}<div class="actions">
+<a class="button" href="{% url 'match_edit' match.pk %}">Изменить время и счёт</a>
+<a class="button secondary" href="{% url 'match_stream_add' match.pk %}">Добавить трансляцию</a>
+</div>{% endif %}</section>
+{% if can_confirm %}<section class="section">
+<div class="section-heading">
+<h2>Подтверждение результата</h2>
+</div>
+<div class="panel">{% for item in confirmations %}<p>{{ item.team.name }} — подтверждено капитаном {{ item.confirmed_by.nickname }}</p>{% empty %}<p class="muted">Капитаны ещё не подтвердили результат.</p>{% endfor %}<div class="actions">{% for team in captain_teams %}<form method="post" action="{% url 'match_confirm' match.pk %}">{% csrf_token %}<input type="hidden" name="team_id" value="{{ team.pk }}"><input type="hidden" name="result_revision" value="{{ result_revision }}">
+<button class="button secondary" type="submit">Подтвердить за {{ team.name }}</button>
+</form>{% endfor %}</div>
+</div>
+</section>{% endif %}
+<section class="section">
+<div class="section-heading">
+<h2>Трансляции</h2>
+</div>{% for item in streams %}<article class="panel stream-panel">
+<div class="section-heading">
+<h3>{{ item.stream.get_platform_display }} <span class="badge {{ item.stream.status }}">{{ item.stream.get_status_display }}</span>
+</h3>{% if can_manage %}<a href="{% url 'stream_edit' item.stream.pk %}">Изменить</a>{% endif %}</div>{% if item.embed_url %}<div class="video-frame {% if item.stream.platform == 'twitch' %}twitch-frame{% endif %}">
+<iframe src="{{ item.embed_url }}" title="Трансляция {{ match.tournament.name }}" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin">
+</iframe>
+</div>{% endif %}<a href="{{ item.stream.url }}" target="_blank" rel="noopener noreferrer" class="external-stream">Открыть на {{ item.stream.get_platform_display }} ↗</a>
+<p class="help">Если плеер недоступен или видео ограничено автором, откройте трансляцию по ссылке.</p>
+</article>{% empty %}<div class="empty">
+<p>Трансляция пока не добавлена.</p>
+</div>{% endfor %}</section>
+<section class="section">
+<div class="section-heading">
+<h2>История счёта</h2>
+</div>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Когда</th>
+<th>Кто</th>
+<th>Было</th>
+<th>Стало</th>
+</tr>
+</thead>
+<tbody>{% for log in history %}<tr>
+<td>{{ log.changed_at|date:'d.m.Y H:i' }}</td>
+<td>{{ log.changed_by.nickname }}</td>
+<td>{{ log.old_score_a|default_if_none:'—' }} : {{ log.old_score_b|default_if_none:'—' }}</td>
+<td>{{ log.new_score_a|default_if_none:'—' }} : {{ log.new_score_b|default_if_none:'—' }}</td>
+</tr>{% empty %}<tr>
+<td colspan="4" class="empty-cell">Изменений счёта пока нет.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+</section>{% endblock %}

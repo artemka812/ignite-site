@@ -22,7 +22,7 @@ class DatabaseDemoTests(TestCase):
 
     def test_home_and_navigation(self):
         response = self.client.get(reverse('home'))
-        self.assertContains(response, 'Всё начинается')
+        self.assertContains(response, 'первого матча.')
         self.assertContains(response, reverse('tournament_list'))
         self.assertContains(response, reverse('tournament_detail', args=['ignite-cup']))
 
@@ -31,14 +31,14 @@ class DatabaseDemoTests(TestCase):
             with self.subTest(tournament=tournament.slug):
                 response = self.client.get(reverse('tournament_detail', args=[tournament.slug]))
                 self.assertContains(response, tournament.name)
-                self.assertEqual(len(response.context['teams']), 4)
+                self.assertEqual(len(response.context['entries']), 4)
                 self.assertEqual(len(response.context['matches']), 3)
                 for team in Team.objects.all():
                     self.assertContains(response, team.name)
 
     def test_filters_combine_and_keep_selected_values(self):
         response = self.client.get(reverse('tournament_list'), {'q': 'ignite', 'game': 'CS2', 'status': 'live'})
-        self.assertEqual([t['slug'] for t in response.context['tournaments']], ['ignite-cup'])
+        self.assertEqual([t.slug for t in response.context['tournaments']], ['ignite-cup'])
         self.assertContains(response, 'value="CS2" selected')
         self.assertContains(response, 'value="ignite"')
 
@@ -55,7 +55,7 @@ class DatabaseDemoTests(TestCase):
         final = tournament.matches.get(round=2)
         self.assertIsNone(final.team_a)
         self.assertIsNone(final.team_b)
-        self.assertContains(self.client.get('/tournaments/campus-arena/'), 'Соперник уточняется')
+        self.assertContains(self.client.get('/tournaments/campus-arena/'), 'Ожидается соперник')
 
     def test_search_is_rendered_as_text(self):
         response = self.client.get(reverse('tournament_list'), {'q': '<script>alert("x")</script>'})
@@ -75,7 +75,7 @@ class DatabaseDemoTests(TestCase):
         response = self.client.get('/')
         self.assertContains(response, 'Новый кубок колледжа')
         self.assertContains(response, 'Новая команда')
-        self.assertEqual(response.context['final']['score_a'], 0)
+        self.assertEqual(response.context['live_matches'][0].score_a, 0)
 
     def test_edited_match_time_and_team_roster_appear(self):
         match = Match.objects.filter(tournament__slug='ignite-cup', round=1).first()
@@ -97,7 +97,7 @@ class DatabaseDemoTests(TestCase):
 
     def test_empty_database_states(self):
         Tournament.objects.update(status=Tournament.Status.DRAFT)
-        self.assertContains(self.client.get('/'), 'Первый турнир впереди')
+        self.assertContains(self.client.get('/'), 'Турниры ещё не объявлены')
         self.assertContains(self.client.get('/tournaments/'), 'Турниров не найдено')
 
     def test_new_tournament_without_matches_or_teams(self):
@@ -108,7 +108,7 @@ class DatabaseDemoTests(TestCase):
             team_limit=8, status=Tournament.Status.SOON,
         )
         response = self.client.get(reverse('tournament_detail', args=[tournament.slug]))
-        self.assertContains(response, 'Матчи ещё не назначены')
+        self.assertContains(response, 'Сетка ещё не сформирована')
         self.assertContains(response, 'Команд: 0 / 8')
         self.assertEqual(response.context['rounds'], [])
 
@@ -116,7 +116,7 @@ class DatabaseDemoTests(TestCase):
         match = Match.objects.get(tournament__slug='first-strike', round=2)
         match.score_a, match.score_b = 1, 2
         match.save()
-        self.assertEqual(self.client.get('/tournaments/first-strike/').context['winner'], match.team_b)
+        self.assertEqual(self.client.get('/tournaments/first-strike/').context['standings'][0]['team'], match.team_b)
 
     def test_seed_is_repeatable_and_preserves_edits(self):
         team = Team.objects.first()
@@ -211,7 +211,7 @@ class DatabaseDemoTests(TestCase):
         response = self.client.post(reverse('admin:tournaments_match_change', args=[match.pk]), {
             'tournament': match.tournament_id, 'team_a': match.team_a_id, 'team_b': match.team_b_id,
             'round': match.round, 'position': match.position, 'best_of': match.best_of,
-            'scheduled_at_0': '2026-10-23', 'scheduled_at_1': '19:30:00',
+            'scheduled_at_0': '2026-10-23', 'scheduled_at_1': '18:00:00',
             'score_a': 2, 'score_b': 1, 'status': 'finished', 'next_match': '', 'next_slot': '',
             '_save': 'Сохранить',
         })
@@ -220,9 +220,9 @@ class DatabaseDemoTests(TestCase):
         self.assertEqual((log.old_score_a, log.old_score_b), (1, 1))
         self.assertEqual((log.new_score_a, log.new_score_b), (2, 1))
         self.assertEqual(log.changed_by, self.admin)
-        self.assertContains(self.client.get('/tournaments/ignite-cup/'), '19:30')
+        self.assertContains(self.client.get('/tournaments/ignite-cup/'), '18:00')
 
     def test_preview_pages_do_not_offer_working_forms(self):
         for page in ('register', 'login', 'player', 'team', 'organizer'):
-            self.assertContains(self.client.get(f'/previews/{page}/'), 'пока не отправляют')
+            self.assertEqual(self.client.get(f'/previews/{page}/').status_code, 302)
         self.assertEqual(self.client.get('/previews/missing/').status_code, 404)

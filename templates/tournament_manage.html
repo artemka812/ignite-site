@@ -1,0 +1,93 @@
+{% extends 'base.html' %}{% block title %}Управление {{ tournament.name }} — IGNITE{% endblock %}{% block content %}<div class="breadcrumbs">
+<a href="{% url 'dashboard' %}">Кабинет</a>
+<span>/</span>
+<a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
+</div>
+<div class="page-heading">
+<div>
+<p class="eyebrow">Организатор</p>
+<h1>{{ tournament.name }}</h1>
+</div>
+<a class="button secondary" href="{% url 'tournament_edit' tournament.slug %}">Настройки</a>
+</div>
+<section class="panel">
+<div class="section-heading">
+<h2>Проведение</h2>
+<span class="badge {{ tournament.status }}">{{ tournament.get_status_display }}</span>
+</div>
+<div class="actions">{% if tournament.status == 'draft' %}<form method="post" action="{% url 'tournament_action' tournament.slug %}">{% csrf_token %}<button class="button" name="action" value="publish">{% if matches %}Опубликовать турнир{% else %}Открыть регистрацию{% endif %}</button>
+</form>{% elif tournament.status == 'soon' and not matches %}<form method="post" action="{% url 'tournament_action' tournament.slug %}">{% csrf_token %}<button class="button secondary" name="action" value="registration">{% if tournament.registration_open %}Закрыть регистрацию{% else %}Открыть регистрацию{% endif %}</button>
+</form>{% endif %}{% if tournament.status == 'draft' or tournament.status == 'soon' %}{% if not matches %}<form method="post" action="{% url 'tournament_action' tournament.slug %}" class="inline-form">{% csrf_token %}<input type="hidden" name="action" value="generate">
+<label class="sr-only" for="seeding">Посев</label>
+<select id="seeding" name="seeding">
+<option value="random">Случайный посев</option>
+<option value="manual">По номерам посева</option>
+</select>
+<button class="button" type="submit">Сформировать сетку</button>
+</form>{% else %}<form method="post" action="{% url 'tournament_action' tournament.slug %}">{% csrf_token %}<button class="button" name="action" value="start">Начать турнир</button>
+</form>{% endif %}{% endif %}<a class="button secondary" href="{{ tournament.get_absolute_url }}">Страница турнира ↗</a>
+</div>
+<p class="help">После формирования сетки состав участников закрепляется. Назначьте время матчей, затем начните турнир.</p>
+</section>
+<section class="section">
+<div class="section-heading">
+<h2>Заявки команд</h2>
+</div>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Команда</th>
+<th>Капитан</th>
+<th>Статус</th>
+<th>Посев / действие</th>
+</tr>
+</thead>
+<tbody>{% for entry in entries %}<tr>
+<td>
+<a href="{{ entry.team.get_absolute_url }}">{{ entry.team.name }}</a>
+</td>
+<td>{{ entry.team.captain.nickname }}</td>
+<td>{{ entry.get_status_display }}</td>
+<td>{% if not matches %}<form method="post" action="{% url 'entry_action' tournament.slug entry.pk %}" class="inline-form">{% csrf_token %}<label class="sr-only" for="seed-{{ entry.pk }}">Номер посева {{ entry.team.name }}</label>
+<input id="seed-{{ entry.pk }}" type="number" min="1" name="seed" value="{{ entry.seed|default_if_none:'' }}" class="short-input" placeholder="№">
+<button class="button small" name="action" value="approve">Принять</button>
+<button class="button small secondary" name="action" value="reject">Отклонить</button>
+</form>{% else %}{{ entry.seed|default_if_none:'—' }}{% endif %}</td>
+</tr>{% empty %}<tr>
+<td colspan="4" class="empty-cell">Заявок пока нет.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+</section>
+<section class="section">
+<div class="section-heading">
+<h2>Матчи</h2>
+</div>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Раунд</th>
+<th>Соперники</th>
+<th>Время</th>
+<th>Действия</th>
+</tr>
+</thead>
+<tbody>{% for match in matches %}<tr>
+<td>{{ match.round }}.{{ match.position }}</td>
+<td>
+<a href="{{ match.get_absolute_url }}">{{ match.team_a.name|default:'Ожидается соперник' }} — {{ match.team_b.name|default:'Ожидается соперник' }}</a>
+</td>
+<td>{{ match.scheduled_at|date:'d.m H:i'|default:'Не назначено' }}</td>
+<td>
+<div class="actions">
+<a href="{% url 'match_edit' match.pk %}">Время и счёт</a>{% if tournament.format == 'single' and match.round == 1 %}{% if tournament.status == 'draft' or tournament.status == 'soon' %}<a href="{% url 'match_pair_edit' match.pk %}">Изменить пару</a>{% endif %}{% endif %}<a href="{% url 'match_stream_add' match.pk %}">Трансляция</a>
+</div>
+</td>
+</tr>{% empty %}<tr>
+<td colspan="4" class="empty-cell">Примите команды и сформируйте сетку.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+</section>{% endblock %}

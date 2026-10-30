@@ -1,0 +1,37 @@
+{% extends 'base.html' %}{% block title %}Матчи — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">Расписание и архив</p>
+<h1>Матчи</h1>
+<p class="muted">Все встречи, ближайшие игры и завершённые серии.</p>
+</div>
+<div class="actions"><a class="button secondary" href="{% url 'match_calendar' %}">Календарь</a><a class="button secondary" href="{% url 'match_list' %}?mine=1">Мои матчи</a></div>
+</div>
+<form method="get" class="filters">
+<div class="grow">
+<label for="q">Поиск</label>
+<input type="search" id="q" name="q" value="{{ query }}" placeholder="Команда или турнир">
+</div>
+<div>
+<label for="tournament">Турнир</label>
+<select id="tournament" name="tournament">
+<option value="">Все турниры</option>{% for t in tournaments %}<option value="{{ t.pk }}" {% if tournament_id == t.pk|stringformat:'s' %}selected{% endif %}>{{ t.name }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="team">Команда</label>
+<select id="team" name="team">
+<option value="">Все команды</option>{% for team in teams %}<option value="{{ team.pk }}" {% if team_id == team.pk|stringformat:'s' %}selected{% endif %}>{{ team.name }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="status">Статус</label>
+<select id="status" name="status">
+<option value="">Все статусы</option>{% for value,label in status_choices %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="date">Дата</label>
+<input type="date" id="date" name="date" value="{{ date }}">
+</div>
+<label class="check-label">
+<input type="checkbox" name="mine" value="1" {% if mine %}checked{% endif %}> Мои матчи</label>
+<button class="button secondary">Применить</button>
+<a href="{% url 'match_list' %}" class="subtle">Сбросить</a>
+</form>{% include 'includes/matches_table.html' %}{% endblock %}

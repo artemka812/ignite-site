@@ -8,8 +8,8 @@ TEAMS = [
 ]
 
 TOURNAMENTS = [
-    {"slug": "ignite-cup", "name": "IGNITE CUP", "subtitle": "Студенческий турнир по Counter-Strike 2", "game": "CS2", "game_label": "Counter-Strike 2", "date": "23 октября 2026", "short_date": "23 окт", "status": "live", "status_label": "Идёт турнир", "accent": "lime", "edition": "01", "description": "Четыре команды, два полуфинала и один кубок. Первый студенческий турнир IGNITE: следите за расписанием, результатами и продвижением команд к финалу."},
-    {"slug": "campus-arena", "name": "CAMPUS ARENA", "subtitle": "Командное соревнование по Dota 2", "game": "DOTA2", "game_label": "Dota 2", "date": "30 октября 2026", "short_date": "30 окт", "status": "soon", "status_label": "Скоро", "accent": "violet", "edition": "02", "description": "Встреча студенческих команд на арене Dota 2. Состав участников и пары уже определены. Первые матчи начнутся 30 октября в 15:00."},
+    {"slug": "ignite-cup", "name": "IGNITE CUP", "subtitle": "Турнир по Counter-Strike 2", "game": "CS2", "game_label": "Counter-Strike 2", "date": "23 октября 2026", "short_date": "23 окт", "status": "live", "status_label": "Идёт турнир", "accent": "lime", "edition": "01", "description": "Четыре команды, два полуфинала и один кубок. Следите за расписанием, результатами и продвижением команд к финалу."},
+    {"slug": "campus-arena", "name": "CAMPUS ARENA", "subtitle": "Командное соревнование по Dota 2", "game": "DOTA2", "game_label": "Dota 2", "date": "30 октября 2026", "short_date": "30 окт", "status": "soon", "status_label": "Скоро", "accent": "violet", "edition": "02", "description": "Встреча команд на арене Dota 2. Состав участников и пары уже определены. Первые матчи начнутся 30 октября в 15:00."},
     {"slug": "first-strike", "name": "FIRST STRIKE", "subtitle": "Осенняя встреча команд по Valorant", "game": "VALORANT", "game_label": "Valorant", "date": "16 октября 2026", "short_date": "16 окт", "status": "finished", "status_label": "Завершён", "accent": "coral", "edition": "03", "description": "Первый осенний турнир по Valorant завершён. Здесь сохранены участники, расписание и результаты всех встреч. Победитель — команда POLYTECH."},
 ]
 

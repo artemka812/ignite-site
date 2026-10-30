@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block title %}{{ title }} — IGNITE{% endblock %}{% block content %}<div class="form-layout">
+<div class="page-heading">
+<div>
+<p class="eyebrow">IGNITE / Аккаунт и управление</p>
+<h1>{{ title }}</h1>{% if description %}<p class="muted">{{ description }}</p>{% endif %}</div>
+</div>
+<form method="post" class="panel field-form">{% csrf_token %}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{{ form.non_field_errors }}{% for field in form %}<div class="field">{% if field.is_hidden %}{{ field }}{% else %}<label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required"> *</span>{% endif %}</label>{{ field }}{% if field.help_text %}<div class="help">{{ field.help_text|safe }}</div>{% endif %}{{ field.errors }}{% endif %}</div>{% endfor %}<div class="actions">
+<button class="button" type="submit">{{ submit_label|default:'Сохранить' }}</button>
+<a href="{{ cancel_url|default:'/' }}" class="button secondary">Отмена</a>
+</div>
+</form>{% if title == 'Вход' %}<p class="form-note">Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+</p>{% endif %}</div>{% endblock %}

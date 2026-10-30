@@ -1,12 +1,12 @@
-<article class="match-card">
-  <div class="match-heading"><span>{{ match.round }} · BO{{ match.best_of }}</span><span>{{ match.time }}</span></div>
-  <div class="team-row {% if match.a and match.winner == match.a.name %}winner{% endif %}">
-    <span class="mini-emblem {{ match.a.color|default:'neutral' }}">{{ match.a.tag|default:'?' }}</span>
-    <strong>{{ match.a.name|default:'Соперник уточняется' }}</strong><b>{{ match.score_a }}</b>
-  </div>
-  <div class="team-row {% if match.b and match.winner == match.b.name %}winner{% endif %}">
-    <span class="mini-emblem {{ match.b.color|default:'neutral' }}">{{ match.b.tag|default:'?' }}</span>
-    <strong>{{ match.b.name|default:'Соперник уточняется' }}</strong><b>{{ match.score_b }}</b>
-  </div>
-  <p class="match-status {% if match.status_code == 'live' %}accent{% endif %}">{{ match.status }}</p>
-</article>
+<a class="bracket-match" href="{{ match.get_absolute_url }}">
+<div class="subtle">Матч {{ match.position }} · {% if match.is_bye %}Проход без игры{% else %}BO{{ match.best_of }}{% endif %}</div>
+<div class="bracket-team {% if match.winner.pk == match.team_a_id %}winner{% endif %}">
+<span>{{ match.team_a.name|default:'Ожидается соперник' }}</span>
+<b>{{ match.score_a|default_if_none:'—' }}</b>
+</div>
+<div class="bracket-team {% if match.winner.pk == match.team_b_id %}winner{% endif %}">
+<span>{% if match.is_bye and not match.team_b %}Без соперника{% else %}{{ match.team_b.name|default:'Ожидается соперник' }}{% endif %}</span>
+<b>{{ match.score_b|default_if_none:'—' }}</b>
+</div>
+<div class="subtle">{{ match.get_status_display }}{% if match.scheduled_at %} · {{ match.scheduled_at|date:'d.m H:i' }}{% endif %}</div>
+</a>

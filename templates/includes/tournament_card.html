@@ -3,19 +3,19 @@
 <span class="art-grid">
 </span>
 <span class="game-mark">{% if t.game == 'CS2' %}CS<span>2</span>{% elif t.game == 'DOTA2' %}DOTA<span>2</span>{% else %}V<span>AL</span>{% endif %}</span>
-<span class="edition">SEASON {{ t.year }} / {{ t.edition }}</span>
+<span class="edition">SEASON {{ t.starts_at|date:'Y' }} / {{ t.edition }}</span>
 <span class="badge {{ t.status }}">{% if t.status == 'live' %}<i>
-</i>{% endif %}{{ t.status_label }}</span>
+</i>{% endif %}{{ t.get_status_display }}</span>
 </div>
   <div class="card-body">
-<p class="eyebrow">{{ t.game_label }}</p>
+<p class="eyebrow">{{ t.get_game_display }}</p>
 <h3>
 <a href="{% url 'tournament_detail' t.slug %}">{{ t.name }} <span aria-hidden="true">↗</span>
 </a>
 </h3>
 <p class="card-description">{{ t.subtitle }}</p>
 <div class="card-meta">
-<span>{{ t.short_date }} · {{ t.year }}</span>
+<span>{{ t.starts_at|date:'d.m' }} · {{ t.starts_at|date:'Y' }}</span>
 <span>Команд: {{ t.team_count }} / {{ t.team_limit }}</span>
 <span>{{ t.team_size }} × {{ t.team_size }}</span>
 </div>

@@ -1,0 +1,30 @@
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Время · МСК</th>
+<th>Матч</th>
+<th>Турнир</th>
+<th>Раунд</th>
+<th>Счёт</th>
+<th>Статус</th>
+</tr>
+</thead>
+<tbody>{% for match in matches %}<tr>
+<td class="nowrap">{% if match.scheduled_at %}{{ match.scheduled_at|date:'d.m · H:i' }}{% else %}Не назначено{% endif %}</td>
+<td>
+<a class="match-link" href="{{ match.get_absolute_url }}">{{ match.team_a.name|default:'Ожидается соперник' }} <span class="muted">—</span> {{ match.team_b.name|default:'Ожидается соперник' }}</a>
+</td>
+<td>
+<a class="muted" href="{{ match.tournament.get_absolute_url }}">{{ match.tournament.name }}</a>
+</td>
+<td class="nowrap">{% if match.tournament.format == 'round_robin' %}Тур{% else %}Раунд{% endif %} {{ match.round }}</td>
+<td class="score nowrap">{% if match.is_bye %}Проход{% else %}{{ match.score_a|default_if_none:'—' }} : {{ match.score_b|default_if_none:'—' }}{% endif %}</td>
+<td>
+<span class="badge {{ match.status }}">{{ match.get_status_display }}</span>
+</td>
+</tr>{% empty %}<tr>
+<td colspan="6" class="empty-cell">Матчей пока нет.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>

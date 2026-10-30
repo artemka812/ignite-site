@@ -11,7 +11,7 @@ MOSCOW = ZoneInfo("Europe/Moscow")
 
 
 class Command(BaseCommand):
-    help = "Добавить учебные данные, сохранив существующие записи и правки."
+    help = "Добавить примеры турниров, сохранив существующие записи и правки."
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -86,4 +86,4 @@ class Command(BaseCommand):
                     semifinal.next_match = matches[2]
                     semifinal.next_slot = slot
                     semifinal.save(update_fields=["next_match", "next_slot"])
-        self.stdout.write(self.style.SUCCESS("Учебные данные добавлены. Существующие значения не перезаписывались."))
+        self.stdout.write(self.style.SUCCESS("Примеры добавлены. Существующие значения не перезаписывались."))

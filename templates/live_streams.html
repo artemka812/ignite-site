@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block title %}Трансляции — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">YouTube / Twitch</p>
+<h1>Трансляции</h1>
+<p class="muted">Прямые эфиры, предстоящие встречи и записи матчей.</p>
+</div>
+</div>
+<div class="simple-grid">{% for stream in streams %}<article class="panel stream-card">
+<div class="section-heading">
+<span class="subtle">{{ stream.get_platform_display }}</span>
+<span class="badge {{ stream.status }}">{{ stream.get_status_display }}</span>
+</div>
+<h2>
+<a href="{{ stream.match.get_absolute_url }}">{{ stream.match.team_a.name|default:'Соперник уточняется' }} — {{ stream.match.team_b.name|default:'Соперник уточняется' }}</a>
+</h2>
+<p>{{ stream.match.tournament.name }} · {{ stream.match.scheduled_at|date:'d.m H:i' }}</p>
+<a href="{{ stream.match.get_absolute_url }}" class="button secondary small">Открыть матч →</a>
+</article>{% empty %}<div class="empty">
+<h2>Эфиров пока нет</h2>
+<p>Здесь появятся трансляции, добавленные организаторами.</p>
+</div>{% endfor %}</div>{% endblock %}

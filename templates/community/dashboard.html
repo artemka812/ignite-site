@@ -1,0 +1,71 @@
+{% extends 'base.html' %}{% block title %}Личный кабинет — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">Личный кабинет</p>
+<h1>{{ user.nickname }}</h1>
+<p class="muted">{{ user.email }}</p>
+</div>
+<div class="actions">
+<a class="button secondary" href="{% url 'profile_edit' %}">Профиль</a>
+<a class="button" href="{% url 'team_create' %}">Создать команду</a>
+</div>
+</div>
+{% if invitations %}<section class="section">
+<div class="section-heading">
+<h2>Приглашения в команды</h2>
+</div>{% for member in invitations %}<div class="request-row panel">
+<a href="{{ member.team.get_absolute_url }}">{{ member.team.name }}</a>
+<form method="post" action="{% url 'team_action' member.team_id %}" class="inline-form">{% csrf_token %}<button class="button small" name="action" value="accept_invite">Принять</button>
+<button class="button secondary small" name="action" value="reject_invite">Отклонить</button>
+</form>
+</div>{% endfor %}</section>{% endif %}
+<section class="section">
+<div class="section-heading">
+<h2>Мои команды</h2>
+<a href="{% url 'team_list' %}">Найти команду →</a>
+</div>
+<div class="simple-grid">{% for team in teams %}<a class="team-item" href="{{ team.get_absolute_url }}">
+<span class="avatar">{{ team.tag }}</span>
+<div>
+<h3>{{ team.name }}</h3>
+<p>{% if team.captain_id == user.pk %}Вы капитан{% else %}Участник{% endif %}</p>
+</div>
+</a>{% empty %}<div class="empty">
+<p>Вступите в команду или создайте свою.</p>
+</div>{% endfor %}</div>{% for member in memberships %}{% if member.status == 'pending' %}<p class="notice">Заявка в {{ member.team.name }} ожидает решения капитана.</p>{% endif %}{% endfor %}</section>
+<section class="section">
+<div class="section-heading">
+<h2>Мои матчи</h2>
+<a href="{% url 'match_list' %}?mine=1">Все мои матчи →</a>
+</div>{% include 'includes/matches_table.html' with matches=my_matches %}</section>
+<section class="section">
+<div class="section-heading">
+<h2>Организатор</h2>{% if user.role == 'organizer' or user.is_superuser %}<a class="button small" href="{% url 'tournament_create' %}">Создать турнир</a>{% endif %}</div>{% if user.role == 'organizer' or user.is_superuser %}<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Турнир</th>
+<th>Статус</th>
+<th>Дата</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>{% for tournament in organized_tournaments %}<tr>
+<td>
+<a href="{{ tournament.get_absolute_url }}">{{ tournament.name }}</a>
+</td>
+<td>{{ tournament.get_status_display }}</td>
+<td>{{ tournament.starts_at|date:'d.m.Y' }}</td>
+<td>
+<a href="{% url 'tournament_manage' tournament.slug %}">Управление →</a>
+</td>
+</tr>{% empty %}<tr>
+<td colspan="4" class="empty-cell">Вы пока не создавали турниры.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>{% else %}<div class="panel">
+<h3>Хотите провести свой турнир?</h3>
+<p class="muted spaced">Режим организатора позволяет создавать соревнования и управлять их матчами.</p>
+<form method="post">{% csrf_token %}<button class="button secondary" name="action" value="become_organizer">Стать организатором</button>
+</form>
+</div>{% endif %}</section>{% endblock %}

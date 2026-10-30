@@ -1,83 +1,48 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %}{% block title %}Турниры и матчи — IGNITE{% endblock %}{% block content %}
 <section class="hero">
-  <div class="hero-copy">
-<p class="eyebrow">
-<span class="tiny-square">
-</span> ТВОЯ КОМАНДА. ТВОЯ ИГРА.</p>
-<h1>Всё начинается<br>с <span>первого матча.</span>
-</h1>
-<p class="hero-description">Турниры, команды и результаты — в одном месте.<br> Следи за игрой и поддерживай своих.</p>
-<a class="button primary" href="{% url 'tournament_list' %}">Смотреть турниры <span aria-hidden="true">↗</span>
-</a>
-<div class="hero-note">
-<span class="line">
-</span> Студенческая лига / сезон 2026</div>
+<div class="hero-copy">
+<p class="eyebrow"><span class="tiny-square"></span>ТВОЯ КОМАНДА. ТВОЯ ИГРА.</p>
+<h1>Всё начинается<br>с <span>первого матча.</span></h1>
+<p class="hero-description">Турниры, команды и результаты — в одном месте.<br>Следи за игрой и поддерживай своих.</p>
+<a class="button" href="{% url 'tournament_list' %}">Смотреть турниры ↗</a>
+<p class="hero-note">Расписание, результаты и участники соревнований.</p>
 </div>
-  {% if featured %}
-  <a class="featured" href="{% url 'tournament_detail' featured.slug %}" aria-label="Открыть {{ featured.name }}">
-    <div class="featured-head">
-<span class="badge {{ featured.status }}">{{ featured.status_label }}</span>
-<span>{{ featured.game }}{% if final %} / BO{{ final.best_of }}{% endif %}</span>
-</div>
-    <div class="featured-title">
-<p class="eyebrow">ГЛАВНЫЙ МАТЧ ДНЯ</p>
-<h2>{{ featured.name }}</h2>
-<p>{% if final %}{{ final.round }} · {{ final.date|date:'j E' }} · {{ final.time }} МСК{% else %}{{ featured.date }}{% endif %}</p>
-</div>
-    {% if final %}<div class="scoreboard">
-<div>
-<span class="team-emblem {{ final.a.color }}">{{ final.a.tag|default:'?' }}</span>
-<strong>{{ final.a.name|default:'Соперник уточняется' }}</strong>
-</div>
-<div class="big-score">{{ final.score_a }}<span>:</span>{{ final.score_b }}<small>СЧЁТ ПО КАРТАМ</small>
-</div>
-<div>
-<span class="team-emblem {{ final.b.color }}">{{ final.b.tag|default:'?' }}</span>
-<strong>{{ final.b.name|default:'Соперник уточняется' }}</strong>
-</div>
-</div>{% else %}<p class="empty-message">Расписание матчей появится здесь.</p>{% endif %}
-    <div class="featured-foot">
-<span>{% if final %}{{ final.status }}{% else %}Следи за новостями турнира{% endif %}</span>
-<span>К турниру ↗</span>
-</div>
-  </a>
-  {% else %}<div class="featured empty-state"><h2>Первый турнир впереди</h2><p>Здесь появятся участники и ближайшие матчи.</p></div>{% endif %}
+{% if featured %}<a class="featured" href="{% if featured_match %}{{ featured_match.get_absolute_url }}{% else %}{{ featured.get_absolute_url }}{% endif %}">
+<div class="featured-head"><span class="badge {% if featured_match %}{{ featured_match.status }}{% else %}{{ featured.status }}{% endif %}">{% if featured_match %}{{ featured_match.get_status_display }}{% else %}{{ featured.get_status_display }}{% endif %}</span><span>{% if featured_match %}{{ featured_match.tournament.get_game_display }} / BO{{ featured_match.best_of }}{% else %}{{ featured.get_game_display }}{% endif %}</span></div>
+<div class="featured-title"><p class="eyebrow">{% if featured_match %}НА АРЕНЕ{% else %}БЛИЖАЙШИЙ ТУРНИР{% endif %}</p><h2>{% if featured_match %}{{ featured_match.tournament.name }}{% else %}{{ featured.name }}{% endif %}</h2><p>{% if featured_match %}{{ featured_match.scheduled_at|date:'d.m · H:i' }} МСК{% else %}{{ featured.starts_at|date:'d.m.Y' }}{% endif %}</p></div>
+{% if featured_match %}<div class="scoreboard"><div><span class="team-emblem {{ featured_match.team_a.color }}">{{ featured_match.team_a.tag|default:'?' }}</span><strong>{{ featured_match.team_a.name|default:'Соперник уточняется' }}</strong></div><div class="big-score">{{ featured_match.score_a|default_if_none:'—' }}<span>:</span>{{ featured_match.score_b|default_if_none:'—' }}<small>СЧЁТ ПО КАРТАМ</small></div><div><span class="team-emblem {{ featured_match.team_b.color }}">{{ featured_match.team_b.tag|default:'?' }}</span><strong>{{ featured_match.team_b.name|default:'Соперник уточняется' }}</strong></div></div>{% else %}<p class="empty">Участники и расписание появятся здесь.</p>{% endif %}
+<div class="featured-foot"><span>{% if featured_match %}Карточка матча{% else %}Участники и сетка{% endif %}</span><span>Подробнее ↗</span></div></a>{% else %}<div class="featured empty"><h2>Первый турнир впереди</h2><p>Новые соревнования появятся здесь.</p></div>{% endif %}
 </section>
-<div class="stats-strip">
-<div>
-<strong>{{ tournament_count|stringformat:'02d' }}</strong>
-<span>турнира в сезоне</span>
-</div>
-<div>
-<strong>{{ team_count|stringformat:'02d' }}</strong>
-<span>команд участвует</span>
-</div>
-<div>
-<strong>{{ game_count|stringformat:'02d' }}</strong>
-<span>игровые дисциплины</span>
-</div>
-<p>Играй за свою команду.<br>
-<strong>Болей за своих.</strong>
-</p>
-</div>
+<div class="stats-strip"><div><strong>{{ counts.tournaments|stringformat:'02d' }}</strong><span>турниров</span></div><div><strong>{{ counts.teams|stringformat:'02d' }}</strong><span>команд</span></div><div><strong>{{ counts.matches|stringformat:'02d' }}</strong><span>матчей сыграно</span></div><p>Играй за свою команду.<br><strong>Болей за своих.</strong></p></div>
+{% if live_matches %}<section class="section">
+<div class="section-heading">
+<h2>Сейчас играют</h2>
+<span class="live-dot">В прямом времени</span>
+</div>{% include 'includes/matches_table.html' with matches=live_matches %}</section>{% endif %}
 <section class="section">
 <div class="section-heading">
-<div>
-<p class="eyebrow">ВЫБИРАЙ СВОЮ ИГРУ</p>
-<h2>На арене</h2>
+<h2>Турниры <span class="count">{{ counts.tournaments }}</span>
+</h2>
+<a href="{% url 'tournament_list' %}">Все турниры →</a>
 </div>
-<a class="text-link" href="{% url 'tournament_list' %}">Все турниры <span aria-hidden="true">↗</span>
-</a>
-</div>
-<div class="cards">{% for t in tournaments %}{% include 'includes/tournament_card.html' %}{% empty %}<p class="empty-state">Турниры пока не объявлены.</p>{% endfor %}</div>
+<div class="cards">{% for t in tournaments %}{% include 'includes/tournament_card.html' %}{% empty %}<div class="empty">
+<h3>Турниры ещё не объявлены</h3>
+<p>Новые соревнования появятся здесь.</p>
+</div>{% endfor %}</div>
 </section>
-<aside class="demo-notice">
-<span class="notice-icon" aria-hidden="true">i</span>
-<div>
-<strong>Учебный сезон IGNITE.</strong>
-<p>Это учебная демоверсия. Турниры, команды и результаты подготовлены для показа возможностей сайта.</p>
+<section class="section">
+<div class="section-heading">
+<h2>Ближайшие матчи</h2>
+<a href="{% url 'match_list' %}">Расписание →</a>
+</div>{% include 'includes/matches_table.html' with matches=upcoming_matches %}</section>
+{% if streams %}<section class="section">
+<div class="section-heading">
+<h2>Эфиры</h2>
+<a href="{% url 'live_streams' %}">Все трансляции →</a>
 </div>
-<span class="version">30.10 / v0.2</span>
-</aside>
-{% endblock %}
+<div class="simple-grid">{% for stream in streams %}<a class="panel" href="{{ stream.match.get_absolute_url }}">
+<span class="badge live">{{ stream.get_platform_display }}</span>
+<h3>{{ stream.match.team_a.name }} — {{ stream.match.team_b.name }}</h3>
+<p>{{ stream.match.tournament.name }}</p>
+</a>{% endfor %}</div>
+</section>{% endif %}{% endblock %}

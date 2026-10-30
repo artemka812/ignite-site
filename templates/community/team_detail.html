@@ -1,0 +1,55 @@
+{% extends 'base.html' %}{% block title %}{{ team.name }} — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div class="identity">{% if team.logo %}<img class="avatar large" src="{{ team.logo }}" alt="Логотип {{ team.name }}" referrerpolicy="no-referrer">{% else %}<span class="avatar large">{{ team.tag }}</span>{% endif %}<div>
+<p class="eyebrow">Команда</p>
+<h1>{{ team.name }}</h1>
+<p class="muted">Капитан: <a href="{{ team.captain.get_absolute_url }}">{{ team.captain.nickname }}</a>
+</p>
+</div>
+</div>{% if can_manage %}<a class="button secondary" href="{% url 'team_edit' team.pk %}">Настройки команды</a>{% elif user.is_authenticated %}<form method="post" action="{% url 'team_action' team.pk %}">{% csrf_token %}{% if not membership or membership.status == 'left' or membership.status == 'rejected' %}<button name="action" value="join" class="button">Вступить в команду</button>{% elif membership.status == 'invited' %}<button name="action" value="accept_invite" class="button">Принять приглашение</button>{% elif membership.status == 'active' %}<button name="action" value="leave" class="button secondary">Покинуть команду</button>{% else %}<span class="badge">Заявка на рассмотрении</span>{% endif %}</form>{% endif %}</div>{% include 'includes/stats.html' %}{% if team.contacts %}<p class="muted">Контакты: {{ team.contacts }}</p>{% endif %}
+<section class="section">
+<div class="section-heading">
+<h2>Состав</h2>
+<span class="subtle">{{ members|length }} игроков</span>
+</div>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>Игрок</th>
+<th>Позиция</th>
+<th>В команде с</th>{% if can_manage %}<th>Управление</th>{% endif %}</tr>
+</thead>
+<tbody>{% for member in members %}<tr>
+<td>
+<a href="{{ member.player.get_absolute_url }}">{{ member.player.nickname }}</a>{% if member.player_id == team.captain_id %} <span class="subtle">Капитан</span>{% endif %}</td>
+<td>{{ member.player.position|default:'—' }}</td>
+<td>{{ member.joined_at|date:'d.m.Y' }}</td>{% if can_manage %}<td>{% if member.player_id != team.captain_id %}<form method="post" action="{% url 'team_action' team.pk %}" class="inline-form">{% csrf_token %}<input type="hidden" name="member_id" value="{{ member.pk }}">
+<button class="link-button" name="action" value="transfer_captain">Передать капитанство</button>
+<button class="link-button danger" name="action" value="remove">Исключить</button>
+</form>{% else %}—{% endif %}</td>{% endif %}</tr>{% empty %}<tr>
+<td colspan="4" class="empty-cell">Состав пока не заполнен.</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+</section>
+{% if can_manage %}<section class="section panel">
+<h2>Пригласить игрока</h2>
+<form method="post" action="{% url 'team_action' team.pk %}" class="inline-form spaced">{% csrf_token %}<input type="hidden" name="action" value="invite">
+<label class="sr-only" for="invite">Ник игрока</label>
+<input id="invite" name="nickname" required placeholder="Точный ник игрока">
+<button class="button">Пригласить</button>
+</form>
+<h3 class="spaced">Заявки и приглашения</h3>{% for member in requests %}<div class="request-row">
+<span>
+<a href="{{ member.player.get_absolute_url }}">{{ member.player.nickname }}</a> · {{ member.get_status_display }}</span>{% if member.status == 'pending' %}<form method="post" action="{% url 'team_action' team.pk %}" class="inline-form">{% csrf_token %}<input type="hidden" name="member_id" value="{{ member.pk }}">
+<button class="button small" name="action" value="approve">Принять</button>
+<button class="button secondary small" name="action" value="reject">Отклонить</button>
+</form>{% endif %}</div>{% empty %}<p class="muted spaced">Новых заявок нет.</p>{% endfor %}</section>{% endif %}
+<section class="section">
+<div class="section-heading">
+<h2>Ближайшие матчи</h2>
+</div>{% include 'includes/matches_table.html' with matches=upcoming_matches %}</section>
+<section class="section">
+<div class="section-heading">
+<h2>История матчей</h2>
+</div>{% include 'includes/matches_table.html' with matches=history %}</section>{% endblock %}

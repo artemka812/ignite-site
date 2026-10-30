@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}Команды — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">Сообщество</p>
+<h1>Команды</h1>
+</div>{% if user.is_authenticated %}<a href="{% url 'team_create' %}" class="button">Создать команду</a>{% endif %}</div>
+<form method="get" class="filters">
+<div class="grow">
+<label for="q">Название или тег</label>
+<input id="q" type="search" name="q" value="{{ query }}" placeholder="Найти команду">
+</div>
+<button class="button secondary">Найти</button>
+</form>
+<div class="simple-grid">{% for team in teams %}<a href="{{ team.get_absolute_url }}" class="team-item">
+<span class="avatar">{{ team.tag }}</span>
+<div>
+<h3>{{ team.name }}</h3>
+<p>Капитан: {{ team.captain.nickname }} · Игроков: {{ team.member_count }}</p>
+</div>
+</a>{% empty %}<div class="empty">
+<h2>Команд не найдено</h2>
+<p>Попробуйте другой запрос.</p>
+</div>{% endfor %}</div>{% endblock %}

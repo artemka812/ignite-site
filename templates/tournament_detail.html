@@ -1,126 +1,109 @@
-{% extends 'base.html' %}
-{% block title %}{{ tournament.name }} — IGNITE{% endblock %}
-{% block content %}
-<div class="breadcrumb">
+{% extends 'base.html' %}{% block title %}{{ tournament.name }} — IGNITE{% endblock %}{% block content %}<div class="breadcrumbs">
 <a href="{% url 'tournament_list' %}">Турниры</a>
-<span>/</span>
-<span>{{ tournament.name }}</span>
-</div>
-<section class="tournament-hero {{ tournament.accent }}">
+<span>/</span>{{ tournament.name }}</div>
+<div class="page-heading">
 <div>
-<div class="tournament-kicker">
-<span class="eyebrow">{{ tournament.game_label }} / СЕЗОН 2026</span>
-<span class="badge {{ tournament.status }}">{% if tournament.status == 'live' %}<i>
-</i>{% endif %}{{ tournament.status_label }}</span>
-</div>
+<p class="eyebrow">{{ tournament.get_game_display }} / {{ tournament.get_format_display }}</p>
 <h1>{{ tournament.name }}</h1>
-<p>{{ tournament.description }}</p>
-<div class="tournament-facts">
-<span>{{ tournament.date }}</span>
-<span>Команд: {{ tournament.team_count }} / {{ tournament.team_limit }} · {{ tournament.team_size }} × {{ tournament.team_size }}</span>
-<span>{{ tournament.format_label }}</span>
-<span>Время матчей — МСК</span>
+<p class="lead">{{ tournament.subtitle }}</p>
 </div>
+<div class="heading-actions">
+<span class="badge {{ tournament.status }}">{{ tournament.get_status_display }}</span>{% if can_manage %}<a class="button secondary" href="{% url 'tournament_manage' tournament.slug %}">Управление</a>{% endif %}</div>
 </div>
-<span class="hero-number" aria-hidden="true">{{ tournament.edition }}</span>
-</section>
-<nav class="section-nav" aria-label="Разделы турнира">
-<a href="#bracket">Турнирная сетка <span>01</span>
-</a>
-<a href="#schedule">Расписание <span>02</span>
-</a>
-<a href="#teams">Команды <span>03</span>
-</a>
-<a href="#rules">Правила <span>04</span>
-</a>
+<div class="meta-line">
+<span>{{ tournament.starts_at|date:'d.m.Y' }} — {{ tournament.ends_at|date:'d.m.Y' }}</span>
+<span>Команд: {{ entries|length }} / {{ tournament.team_limit }}</span>
+<span>{{ tournament.team_size }} × {{ tournament.team_size }}</span>
+<span>Организатор: <a href="{{ tournament.organizer.get_absolute_url }}">{{ tournament.organizer.nickname }}</a>
+</span>
+</div>
+<nav data-refresh-tournament class="section-tabs" aria-label="Разделы турнира">
+<a href="#bracket">Сетка</a>
+<a href="#schedule">Расписание</a>
+<a href="#standings">Результаты</a>
+<a href="#teams">Участники</a>
+<a href="#rules">О турнире</a>
 </nav>
-<section class="section" id="bracket">
-<div class="section-heading">
+{% if registration_available %}<section class="registration-strip">
 <div>
-<p class="eyebrow">ПУТЬ К КУБКУ</p>
-<h2>Турнирная сетка</h2>
-</div>
-<span class="muted">{{ tournament.format_label }}</span>
-</div>
-{% if rounds %}
-<div class="bracket-scroll" tabindex="0" role="region" aria-label="Матчи по раундам с горизонтальной прокруткой">
-  <div class="bracket-flow">
-    {% for round in rounds %}
-    <div class="bracket-round">
-      <p class="round-label">{{ round.title }} <span>Матчей: {{ round.matches|length }}</span></p>
-      {% for match in round.matches %}{% include 'includes/match_card.html' %}{% endfor %}
-    </div>
-    {% if not forloop.last and tournament.format == 'single' %}<div class="round-arrow" aria-hidden="true">→</div>{% endif %}
-    {% endfor %}
-    {% if tournament.format == 'single' %}
-    <div class="bracket-prize"><span aria-hidden="true">♜</span><p>ПОБЕДИТЕЛЬ</p><strong>{{ winner.name|default:'Кубок ждёт' }}</strong></div>
-    {% endif %}
-  </div>
-</div>
-<p class="hint">{{ tournament.format_label }}. Матчи и результаты учебного турнира.</p>
-{% else %}<div class="empty-state"><h3>Матчи ещё не назначены</h3><p>После подготовки турнира здесь появятся пары и расписание.</p></div>{% endif %}
-</section>
-<section class="section" id="schedule">
+<h3>Регистрация открыта</h3>
+<p class="muted">Капитан может отправить заявку от своей команды.</p>
+</div>{% if eligible_teams %}<form method="post" action="{% url 'tournament_apply' tournament.slug %}" class="inline-form">{% csrf_token %}<label class="sr-only" for="apply-team">Команда</label>
+<select id="apply-team" name="team_id" required>{% for team in eligible_teams %}<option value="{{ team.pk }}">{{ team.name }}</option>{% endfor %}</select>
+<button class="button" type="submit">Подать заявку</button>
+</form>{% elif not user.is_authenticated %}<a class="button" href="{% url 'login' %}?next={{ request.path }}">Войти для участия</a>{% elif not own_entries %}<a href="{% url 'team_create' %}" class="button secondary">Создать команду</a>{% endif %}</section>{% endif %}
+{% for entry in own_entries %}<div class="notice">Заявка {{ entry.team.name }}: <strong>{{ entry.get_status_display }}</strong>{% if registration_available %}<form method="post" action="{% url 'tournament_apply' tournament.slug %}" class="inline-form">{% csrf_token %}<input type="hidden" name="team_id" value="{{ entry.team_id }}">
+<button name="action" value="withdraw" class="link-button" type="submit">Отозвать заявку</button>
+</form>{% endif %}</div>{% endfor %}
+<section id="bracket" class="section">
 <div class="section-heading">
-<div>
-<p class="eyebrow">НЕ ПРОПУСТИ ИГРУ</p>
-<h2>Расписание матчей</h2>
+<h2>{% if tournament.format == 'round_robin' %}Туры{% else %}Турнирная сетка{% endif %}</h2>
+<span class="subtle">{{ tournament.get_format_display }}</span>
+</div>{% if rounds %}<div class="bracket-scroll" tabindex="0" role="region" aria-label="Турнирная сетка">
+<div class="bracket-flow">{% for round in rounds %}<div class="bracket-round">
+<h3>{{ round.title }}</h3>{% for match in round.matches %}{% include 'includes/match_card.html' %}{% endfor %}</div>{% endfor %}</div>
+</div>{% else %}<div class="empty">
+<h3>Сетка ещё не сформирована</h3>
+<p>Пары появятся после завершения регистрации.</p>
+</div>{% endif %}</section>
+<section id="schedule" class="section">
+<div class="section-heading">
+<h2>Расписание</h2>
+<span class="subtle">Время — МСК</span>
+</div>{% include 'includes/matches_table.html' %}</section>
+<section id="standings" class="section">
+<div class="section-heading">
+<h2>Результаты</h2>
 </div>
-<span class="muted">{{ tournament.date }} · МСК</span>
-</div>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Расписание с горизонтальной прокруткой">
+<div class="table-scroll">
 <table>
-<caption class="sr-only">Расписание {{ tournament.name }}, время московское</caption>
 <thead>
 <tr>
-<th scope="col">Время</th>
-<th scope="col">Этап</th>
-<th scope="col">Встреча</th>
-<th scope="col">Счёт</th>
-<th scope="col">Статус</th>
+<th>Место</th>
+<th>Команда</th>
+<th>Матчи</th>
+<th>Победы</th>
+<th>Поражения</th>
+<th>Разница карт</th>
+<th>Очки</th>
 </tr>
 </thead>
-<tbody>{% for match in matches %}<tr>
-<td class="time-cell">{{ match.time }}<small class="match-date">{{ match.date|date:"d.m.Y" }}</small></td>
-<td>{{ match.round }}</td>
+<tbody>{% for row in standings %}<tr>
+<td>{{ row.place }}</td>
 <td>
-<strong>{{ match.a.name|default:'Победитель ПФ 1' }}</strong>
-<span class="versus">vs</span>
-<strong>{{ match.b.name|default:'Победитель ПФ 2' }}</strong>
+<a href="{{ row.team.get_absolute_url }}">{{ row.team.name }}</a>
 </td>
-<td class="table-score">{{ match.score_a }} : {{ match.score_b }}</td>
-<td>
-<span class="table-status {% if match.status == 'Идёт матч' %}accent{% endif %}">{{ match.status }}</span>
-</td>
-</tr>{% empty %}<tr><td colspan="5">Расписание пока не опубликовано.</td></tr>{% endfor %}</tbody>
+<td>{{ row.played }}</td>
+<td>{{ row.wins }}</td>
+<td>{{ row.losses }}</td>
+<td>{{ row.difference }}</td>
+<td class="score">{{ row.points }}</td>
+</tr>{% empty %}<tr>
+<td colspan="7" class="empty-cell">Участников пока нет.</td>
+</tr>{% endfor %}</tbody>
 </table>
 </div>
 </section>
-<section class="section" id="teams">
+<section id="teams" class="section">
 <div class="section-heading">
+<h2>Участники <span class="count">{{ entries|length }}</span>
+</h2>
+</div>
+<div class="simple-grid">{% for entry in entries %}<a href="{{ entry.team.get_absolute_url }}" class="team-item">
+<span class="avatar">{{ entry.team.tag }}</span>
 <div>
-<p class="eyebrow">ЛИЦА ТУРНИРА</p>
-<h2>Участники</h2>
+<h3>{{ entry.team.name }}</h3>
+<p>Капитан: {{ entry.team.captain.nickname }}</p>
 </div>
-<span class="muted">Команд: {{ teams|length }} / {{ tournament.team_limit }}</span>
-</div>
-<div class="teams-grid">{% for team in teams %}<article class="team-card">
-<span class="team-emblem {{ team.color }}">{{ team.tag }}</span>
-<h3>{{ team.name }}</h3>
-<p>Капитан: <strong>{{ team.captain }}</strong>
-</p>
-<details>
-<summary>Состав команды <span aria-hidden="true">+</span>
-</summary>
-<p>{{ team.players }}</p>
-</details>
-</article>{% empty %}<p class="empty-state">Список участников пока не опубликован.</p>{% endfor %}</div>
+</a>{% empty %}<p class="empty">Здесь появятся принятые команды.</p>{% endfor %}</div>
 </section>
-<section class="rules section" id="rules">
+<section id="rules" class="section about-grid">
 <div>
-<p class="eyebrow">ПЕРЕД СТАРТОМ</p>
-<h2>Коротко о правилах</h2>
+<h2>О турнире</h2>
+<div class="prose">{{ tournament.description|linebreaks }}</div>
 </div>
-{% if tournament.rules %}<ol>{% for rule in tournament.rules %}{% if rule %}<li>{{ rule }}</li>{% endif %}{% endfor %}</ol>{% else %}<p class="muted">Правила появятся перед началом турнира.</p>{% endif %}
-</section>
-{% endblock %}
+<div>
+<h2>Правила</h2>
+<div class="prose">{{ tournament.rules|linebreaks|default:'Правила будут опубликованы организатором.' }}</div>
+</div>
+</section>{% endblock %}

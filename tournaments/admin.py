@@ -2,8 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.db import transaction
 
-from .forms import AdminUserChangeForm, AdminUserCreationForm
+from .forms import AdminMatchForm, AdminUserChangeForm, AdminUserCreationForm
 from .models import Match, MatchResultLog, Stream, Team, TeamMember, Tournament, TournamentTeam, User
+from . import services
 
 admin.site.site_header = "IGNITE — управление сайтом"
 admin.site.site_title = "IGNITE"
@@ -73,14 +74,32 @@ class TournamentTeamAdmin(admin.ModelAdmin):
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
+    form = AdminMatchForm
     list_display = ("tournament", "round", "position", "team_a", "team_b", "scheduled_at", "score_a", "score_b", "status")
     list_filter = ("tournament", "status", "round")
     search_fields = ("tournament__name", "team_a__name", "team_b__name")
     autocomplete_fields = ("tournament", "team_a", "team_b", "next_match")
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.tournament.status in ("live", "finished"):
+            return ("tournament", "team_a", "team_b", "round", "position", "best_of", "next_match", "next_slot", "is_bye", "participants_snapshot", "scheduled_at")
+        return ("participants_snapshot",)
+
+    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        with transaction.atomic():
+            if request.method == "POST" and object_id and object_id.isdecimal():
+                tournament_id = Match.objects.filter(pk=object_id).values_list("tournament_id", flat=True).first()
+                if tournament_id:
+                    Tournament.objects.select_for_update().get(pk=tournament_id)
+            return super().changeform_view(request, object_id, form_url, extra_context)
+
     @transaction.atomic
     def save_model(self, request, obj, form, change):
         old = Match.objects.select_for_update().get(pk=obj.pk) if change else None
+        if old and old.tournament.status in ("live", "finished"):
+            saved = services.update_result(old, request.user, obj.score_a, obj.score_b, obj.status)
+            obj.participants_snapshot = saved.participants_snapshot
+            return
         super().save_model(request, obj, form, change)
         old_score = (old.score_a, old.score_b) if old else (None, None)
         if old_score != (obj.score_a, obj.score_b):

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% block title %}{{ player.nickname }} — IGNITE{% endblock %}{% block content %}<div class="page-heading">
+<div class="identity">{% if player.avatar %}<img class="avatar large" src="{{ player.avatar }}" alt="Аватар {{ player.nickname }}" loading="lazy" referrerpolicy="no-referrer">{% else %}<span class="avatar large">{{ player.nickname|slice:':2'|upper }}</span>{% endif %}<div>
+<p class="eyebrow">Игрок</p>
+<h1>{{ player.nickname }}</h1>
+<p class="muted">{{ player.position|default:'Позиция не указана' }}{% if player.game_id %} · {{ player.game_id }}{% endif %}</p>
+</div>
+</div>{% if user.pk == player.pk %}<a class="button secondary" href="{% url 'profile_edit' %}">Редактировать профиль</a>{% endif %}</div>{% include 'includes/stats.html' %}<section class="section">
+<div class="section-heading">
+<h2>Команды</h2>
+</div>
+<div class="simple-grid">{% for member in memberships %}<a class="team-item" href="{{ member.team.get_absolute_url }}">
+<span class="avatar">{{ member.team.tag }}</span>
+<h3>{{ member.team.name }}</h3>
+</a>{% empty %}<p class="empty">Игрок пока не состоит в команде.</p>{% endfor %}</div>
+</section>
+<section class="section">
+<div class="section-heading">
+<h2>История и расписание матчей</h2>
+</div>{% include 'includes/matches_table.html' %}</section>{% endblock %}

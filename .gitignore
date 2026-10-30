@@ -3,7 +3,9 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 .env
+config.local.ini
 .idea/
 .vscode/
 staticfiles/
 work/
+.omx/

@@ -1,0 +1,12 @@
+<article class="match-card">
+  <div class="match-heading"><span>{{ match.round }} · BO{{ match.best_of }}</span><span>{{ match.time }}</span></div>
+  <div class="team-row {% if match.a and match.winner == match.a.name %}winner{% endif %}">
+    <span class="mini-emblem {{ match.a.color|default:'neutral' }}">{{ match.a.tag|default:'?' }}</span>
+    <strong>{{ match.a.name|default:'Соперник уточняется' }}</strong><b>{{ match.score_a }}</b>
+  </div>
+  <div class="team-row {% if match.b and match.winner == match.b.name %}winner{% endif %}">
+    <span class="mini-emblem {{ match.b.color|default:'neutral' }}">{{ match.b.tag|default:'?' }}</span>
+    <strong>{{ match.b.name|default:'Соперник уточняется' }}</strong><b>{{ match.score_b }}</b>
+  </div>
+  <p class="match-status {% if match.status_code == 'live' %}accent{% endif %}">{{ match.status }}</p>
+</article>

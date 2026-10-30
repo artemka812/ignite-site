@@ -1,4 +1,4 @@
-"""Учебные данные первого этапа. База и генерация сеток появятся позже."""
+"""Исходные примеры только для команды seed_demo. Страницы читают базу."""
 
 TEAMS = [
     {"name": "POLYTECH", "tag": "PT", "captain": "chefran", "players": "chefran · frost · nexx · pulse · echo", "color": "lime"},

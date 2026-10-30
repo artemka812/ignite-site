@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ preview_title }} — макет IGNITE{% endblock %}
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">ПРОЕКТИРОВАНИЕ ИНТЕРФЕЙСА</p>
+  <h1>{{ preview_title }}<span class="accent">.</span></h1>
+  <p>Предварительный вид следующих страниц. Эти формы пока не отправляют и не сохраняют данные.</p>
+</section>
+<nav class="preview-nav" aria-label="Макеты страниц">
+  {% for key, label in previews %}<a class="button secondary" href="{% url 'preview_detail' key %}" {% if page == key %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+</nav>
+{% if page == 'register' or page == 'login' %}
+<section class="prototype-panel">
+  <h2>{% if page == 'register' %}Создать аккаунт{% else %}С возвращением{% endif %}</h2>
+  <p class="muted">Макет. Поля отключены до реализации регистрации и входа.</p>
+  <fieldset disabled class="prototype-form">
+    {% if page == 'register' %}<label>Игровой ник<input placeholder="Например, chefran"></label>{% endif %}
+    <label>Email<input type="email" placeholder="player@example.com"></label>
+    <label>Пароль<input type="password" placeholder="Не менее 8 символов"></label>
+    {% if page == 'register' %}<label>Повтор пароля<input type="password" placeholder="Повтори пароль"></label>{% endif %}
+    <button class="button primary" type="button">{% if page == 'register' %}Зарегистрироваться{% else %}Войти{% endif %}</button>
+  </fieldset>
+</section>
+{% elif page == 'player' %}
+<section class="prototype-panel"><div class="preview-profile"><span class="team-emblem lime">CF</span><div><p class="eyebrow">ПРОФИЛЬ ИГРОКА</p><h2>chefran</h2><p class="muted">POLYTECH · Капитан · Поддержка</p></div></div>
+  <fieldset disabled class="prototype-form"><label>Игровой ник<input value="chefran"></label><label>Игровой ID<input placeholder="Steam / Riot ID"></label><label>Позиция<input value="Поддержка"></label><button class="button primary" type="button">Сохранить профиль</button></fieldset>
+  <p class="hint">История матчей и статистика появятся на следующих этапах.</p>
+</section>
+{% elif page == 'team' %}
+<section class="prototype-panel"><div class="preview-profile"><span class="team-emblem lime">PT</span><div><p class="eyebrow">КОМАНДА</p><h2>POLYTECH</h2><p class="muted">Капитан: chefran · Учебный состав</p></div></div>
+  <h3>Состав команды</h3><p class="preview-roster">chefran · frost · nexx · pulse · echo</p>
+  <fieldset disabled class="prototype-form"><label>Название<input value="POLYTECH"></label><label>Контакты<input placeholder="Контакт капитана"></label><button class="button primary" type="button">Управление составом</button></fieldset>
+</section>
+{% elif page == 'organizer' %}
+<section class="prototype-panel"><p class="eyebrow">КАБИНЕТ ОРГАНИЗАТОРА</p><h2>Мои турниры</h2><p class="muted">Пример таблицы будущего кабинета.</p>
+<div class="table-scroll"><table><thead><tr><th>Турнир</th><th>Статус</th><th>Заявки</th></tr></thead><tbody><tr><td>IGNITE CUP</td><td>Идёт</td><td>4 / 4</td></tr><tr><td>CAMPUS ARENA</td><td>Скоро</td><td>4 / 4</td></tr></tbody></table></div>
+<button class="button primary" type="button" disabled>Создать турнир</button></section>
+{% else %}<div class="empty-state"><h2>Пять страниц следующего этапа</h2><p>Выбери макет выше, чтобы посмотреть форму и расположение блоков.</p></div>{% endif %}
+<p class="page-note"><a class="text-link" href="{% url 'home' %}">← Вернуться на сайт</a></p>
+{% endblock %}

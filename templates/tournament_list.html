@@ -34,12 +34,12 @@
 </form>
 <div class="list-meta">
 <span>Найдено турниров: <strong>{{ tournaments|length }}</strong>
-</span>{% if query or game or status %}<a class="text-link" href="{% url 'tournament_list' %}">Сбросить фильтры ×</a>{% endif %}<span>Олимпийская система · 4 команды</span>
+</span>{% if query or game or status %}<a class="text-link" href="{% url 'tournament_list' %}">Сбросить фильтры ×</a>{% endif %}<span>Студенческие соревнования</span>
 </div>
 <div class="cards list-cards">{% for t in tournaments %}{% include 'includes/tournament_card.html' %}{% empty %}<div class="empty-state">
 <h2>Турниров не найдено</h2>
 <p>Попробуй другое название или измени фильтры.</p>
 <a class="button secondary" href="{% url 'tournament_list' %}">Показать все турниры</a>
 </div>{% endfor %}</div>
-<p class="page-note">Демонстрационный сезон: три турнира, три дисциплины и первые истории команд.</p>
+<p class="page-note">Студенческий сезон: турниры, команды и первые истории участников.</p>
 {% endblock %}

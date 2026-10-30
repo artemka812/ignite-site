@@ -1,0 +1,11 @@
+; Скопируй в config.local.ini или запусти configure_postgres.py.
+; Настоящий config.local.ini исключён из Git.
+[database]
+name = ignite_site
+user = ignite_site_app
+password =
+host = 127.0.0.1
+port = 5432
+
+[django]
+secret_key =

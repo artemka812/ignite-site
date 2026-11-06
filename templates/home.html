@@ -9,7 +9,7 @@
 </div>
 {% if featured %}<a class="featured" href="{% if featured_match %}{{ featured_match.get_absolute_url }}{% else %}{{ featured.get_absolute_url }}{% endif %}">
 <div class="featured-head"><span class="badge {% if featured_match %}{{ featured_match.status }}{% else %}{{ featured.status }}{% endif %}">{% if featured_match %}{{ featured_match.get_status_display }}{% else %}{{ featured.get_status_display }}{% endif %}</span><span>{% if featured_match %}{{ featured_match.tournament.get_game_display }} / BO{{ featured_match.best_of }}{% else %}{{ featured.get_game_display }}{% endif %}</span></div>
-<div class="featured-title"><p class="eyebrow">{% if featured_match %}НА АРЕНЕ{% else %}БЛИЖАЙШИЙ ТУРНИР{% endif %}</p><h2>{% if featured_match %}{{ featured_match.tournament.name }}{% else %}{{ featured.name }}{% endif %}</h2><p>{% if featured_match %}{{ featured_match.scheduled_at|date:'d.m · H:i' }} МСК{% else %}{{ featured.starts_at|date:'d.m.Y' }}{% endif %}</p></div>
+<div class="featured-title"><p class="eyebrow">{% if featured_match %}НА АРЕНЕ{% else %}БЛИЖАЙШИЙ ТУРНИР{% endif %}</p><h2>{% if featured_match %}{{ featured_match.tournament.name }}{% else %}{{ featured.name }}{% endif %}</h2><p>{% if featured_match %}{% include 'includes/match_date.html' with match=featured_match %}{% else %}{{ featured.starts_at|date:'d.m.Y' }}{% endif %}</p></div>
 {% if featured_match %}<div class="scoreboard"><div><span class="team-emblem {{ featured_match.team_a.color }}">{{ featured_match.team_a.tag|default:'?' }}</span><strong>{{ featured_match.team_a.name|default:'Соперник уточняется' }}</strong></div><div class="big-score">{{ featured_match.score_a|default_if_none:'—' }}<span>:</span>{{ featured_match.score_b|default_if_none:'—' }}<small>СЧЁТ ПО КАРТАМ</small></div><div><span class="team-emblem {{ featured_match.team_b.color }}">{{ featured_match.team_b.tag|default:'?' }}</span><strong>{{ featured_match.team_b.name|default:'Соперник уточняется' }}</strong></div></div>{% else %}<p class="empty">Участники и расписание появятся здесь.</p>{% endif %}
 <div class="featured-foot"><span>{% if featured_match %}Карточка матча{% else %}Участники и сетка{% endif %}</span><span>Подробнее ↗</span></div></a>{% else %}<div class="featured empty"><h2>Первый турнир впереди</h2><p>Новые соревнования появятся здесь.</p></div>{% endif %}
 </section>
@@ -30,6 +30,7 @@
 <p>Новые соревнования появятся здесь.</p>
 </div>{% endfor %}</div>
 </section>
+{% if archive_matches %}<section class="section"><div class="section-heading"><h2>Результаты CCT</h2><a href="{% url 'match_list' %}?q=CCT">Все матчи →</a></div>{% include 'includes/matches_table.html' with matches=archive_matches %}</section>{% endif %}
 <section class="section">
 <div class="section-heading">
 <h2>Ближайшие матчи</h2>
@@ -37,12 +38,13 @@
 </div>{% include 'includes/matches_table.html' with matches=upcoming_matches %}</section>
 {% if streams %}<section class="section">
 <div class="section-heading">
-<h2>Эфиры</h2>
+<h2>Трансляции и записи</h2>
 <a href="{% url 'live_streams' %}">Все трансляции →</a>
 </div>
 <div class="simple-grid">{% for stream in streams %}<a class="panel" href="{{ stream.match.get_absolute_url }}">
-<span class="badge live">{{ stream.get_platform_display }}</span>
+<span class="badge {{ stream.status }}">{{ stream.get_platform_display }} · {{ stream.get_status_display }}</span>
 <h3>{{ stream.match.team_a.name }} — {{ stream.match.team_b.name }}</h3>
 <p>{{ stream.match.tournament.name }}</p>
+{% if stream.title %}<p class="subtle">{{ stream.title }}</p>{% endif %}
 </a>{% endfor %}</div>
 </section>{% endif %}{% endblock %}

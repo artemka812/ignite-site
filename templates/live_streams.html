@@ -13,7 +13,8 @@
 <h2>
 <a href="{{ stream.match.get_absolute_url }}">{{ stream.match.team_a.name|default:'Соперник уточняется' }} — {{ stream.match.team_b.name|default:'Соперник уточняется' }}</a>
 </h2>
-<p>{{ stream.match.tournament.name }} · {{ stream.match.scheduled_at|date:'d.m H:i' }}</p>
+<p>{{ stream.match.tournament.name }} · {% include 'includes/match_date.html' with match=stream.match %}</p>
+{% if stream.title %}<p class="muted">{{ stream.title }}</p>{% endif %}
 <a href="{{ stream.match.get_absolute_url }}" class="button secondary small">Открыть матч →</a>
 </article>{% empty %}<div class="empty">
 <h2>Эфиров пока нет</h2>

@@ -50,13 +50,15 @@ def visible_match(request, pk):
 
 def home(request):
     matches = Match.objects.exclude(tournament__status='draft').filter(is_bye=False).select_related('tournament', 'team_a', 'team_b')
+    archive_matches = matches.exclude(source_url='').filter(status='finished').order_by('-scheduled_at', '-round', 'position')
     return render(request, 'home.html', {
         'featured': public_tournaments().first(),
-        'featured_match': matches.filter(status='live').first() or matches.order_by('-scheduled_at').first(),
+        'featured_match': archive_matches.first() or matches.filter(status='live').first() or matches.order_by('-scheduled_at').first(),
+        'archive_matches': archive_matches[:6],
         'tournaments': public_tournaments()[:6],
         'upcoming_matches': matches.filter(status='planned').order_by('scheduled_at', 'pk')[:5],
         'live_matches': matches.filter(status='live')[:4],
-        'streams': Stream.objects.filter(status='live').exclude(match__tournament__status='draft').select_related('match__tournament', 'match__team_a', 'match__team_b')[:3],
+        'streams': Stream.objects.exclude(match__tournament__status='draft').select_related('match__tournament', 'match__team_a', 'match__team_b').order_by('-match__scheduled_at', '-pk')[:3],
         'counts': {'tournaments': public_tournaments().count(), 'teams': Team.objects.count(), 'matches': matches.filter(status='finished').count()},
     })
 
@@ -230,6 +232,8 @@ def entry_action(request, slug, pk):
 
 def match_detail(request, pk):
     match = visible_match(request, pk)
+    roster_ids = {pk for ids in match.participants_snapshot.values() for pk in ids}
+    roster_players = {player.pk: player for player in User.objects.filter(pk__in=roster_ids)}
     revision = match.result_logs.order_by('-pk').values_list('pk', flat=True).first() or 0
     captain_teams = [team for team in (match.team_a, match.team_b) if team and request.user.is_authenticated and team.captain_id == request.user.pk]
     return render(request, 'match_detail.html', {
@@ -237,9 +241,13 @@ def match_detail(request, pk):
         'streams': [{'stream': stream, 'embed_url': stream.embed_url(request.get_host().split(':')[0])} for stream in match.streams.all()],
         'history': match.result_logs.select_related('changed_by'),
         'confirmations': match.confirmations.filter(result_revision=revision).select_related('team', 'confirmed_by'),
-        'can_confirm': match.status == 'finished' and not match.is_bye,
+        'can_confirm': match.status == 'finished' and not match.is_bye and not match.source_url,
         'captain_teams': captain_teams,
         'result_revision': revision,
+        'rosters': [
+            {'team': team, 'players': [roster_players[pk] for pk in match.participants_snapshot.get(side, []) if pk in roster_players]}
+            for side, team in (('a', match.team_a), ('b', match.team_b))
+        ] if roster_ids else [],
     })
 
 

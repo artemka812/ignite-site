@@ -14,7 +14,7 @@
 <span class="avatar">{{ team.tag }}</span>
 <div>
 <h3>{{ team.name }}</h3>
-<p>Капитан: {{ team.captain.nickname }} · Игроков: {{ team.member_count }}</p>
+<p>{% if not team.archive_note %}Капитан: {{ team.captain.nickname }} · {% endif %}Игроков: {{ team.member_count }}</p>
 </div>
 </a>{% empty %}<div class="empty">
 <h2>Команд не найдено</h2>

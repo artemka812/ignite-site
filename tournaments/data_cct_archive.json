@@ -1,0 +1,686 @@
+[
+  {
+    "series": 12,
+    "start": "2024-09-15",
+    "end": "2024-09-28",
+    "source": "https://www.hltv.org/events/8074/cct-season-2-europe-series-12",
+    "results": "https://www.hltv.org/results?event=8074",
+    "matches": [
+      {
+        "date": "2024-09-28",
+        "a": "BETBOOM",
+        "b": "GamerLegion",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-09-28",
+        "a": "Aurora",
+        "b": "GamerLegion",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-09-28",
+        "a": "BETBOOM",
+        "b": "3DMAX",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-09-27",
+        "a": "Sangal",
+        "b": "BETBOOM",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-09-27",
+        "a": "ECSTATIC",
+        "b": "Aurora",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-09-27",
+        "a": "B8",
+        "b": "GamerLegion",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-09-27",
+        "a": "3DMAX",
+        "b": "CYBERSHOKE",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-09-26",
+        "a": "GamerLegion",
+        "b": "CPH Wolves",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-09-26",
+        "a": "BETBOOM",
+        "b": "Monte Gen",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-09-26",
+        "a": "Sangal",
+        "b": "Passion UA",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-09-26",
+        "a": "B8",
+        "b": "Insilio",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-09-25",
+        "a": "Aurora",
+        "b": "Endpoint",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-09-25",
+        "a": "BIG",
+        "b": "ECSTATIC",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-09-25",
+        "a": "3DMAX",
+        "b": "Zero Tenacity",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-09-25",
+        "a": "SINNERS",
+        "b": "CYBERSHOKE",
+        "score_a": 0,
+        "score_b": 2
+      }
+    ]
+  },
+  {
+    "series": 13,
+    "start": "2024-09-23",
+    "end": "2024-10-06",
+    "source": "https://www.hltv.org/events/8086/cct-season-2-europe-series-13",
+    "results": "https://egamersworld.com/counterstrike/event/cct-season-2-european-series-13-DE2AuRq6tq",
+    "matches": [
+      {
+        "date": "2024-10-06",
+        "a": "Passion UA",
+        "b": "GamerLegion",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-06",
+        "a": "9 Pandas",
+        "b": "GamerLegion",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-06",
+        "a": "3DMAX",
+        "b": "Passion UA",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-05",
+        "a": "B8",
+        "b": "GamerLegion",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-05",
+        "a": "ECSTATIC",
+        "b": "9 Pandas",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-05",
+        "a": "Permitta",
+        "b": "Passion UA",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-05",
+        "a": "3DMAX",
+        "b": "PARIVISION",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-04",
+        "a": "GamerLegion",
+        "b": "DRILLAS",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-04",
+        "a": "9 Pandas",
+        "b": "DMS",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-10-04",
+        "a": "Aurora",
+        "b": "Passion UA",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-04",
+        "a": "Ninjas in Pyjamas",
+        "b": "ECSTATIC",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-03",
+        "a": "SINNERS",
+        "b": "Permitta",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-03",
+        "a": "3DMAX",
+        "b": "Rhyno",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-03",
+        "a": "B8",
+        "b": "ALTERNATE aTTaX",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-03",
+        "a": "PARIVISION",
+        "b": "Spirit Academy",
+        "score_a": 2,
+        "score_b": 1
+      }
+    ]
+  },
+  {
+    "series": 14,
+    "start": "2024-09-30",
+    "end": "2024-10-13",
+    "source": "https://www.hltv.org/events/8105/cct-season-2-europe-series-14",
+    "results": "https://www.hltv.org/results?event=8105",
+    "matches": [
+      {
+        "date": "2024-10-13",
+        "a": "Spirit Academy",
+        "b": "FAVBET",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-13",
+        "a": "FAVBET",
+        "b": "Aurora",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-13",
+        "a": "Spirit Academy",
+        "b": "SINNERS",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-12",
+        "a": "GUN5",
+        "b": "SINNERS",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-12",
+        "a": "3DMAX",
+        "b": "Spirit Academy",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-12",
+        "a": "Metizport",
+        "b": "Aurora",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-12",
+        "a": "FAVBET",
+        "b": "Passion UA",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-10-11",
+        "a": "SINNERS",
+        "b": "Monte",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-10-11",
+        "a": "GamerLegion",
+        "b": "GUN5",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-11",
+        "a": "BETBOOM",
+        "b": "FAVBET",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-11",
+        "a": "Cloud9",
+        "b": "Passion UA",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-10",
+        "a": "3DMAX",
+        "b": "CYBERSHOKE",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-10-10",
+        "a": "OG",
+        "b": "Spirit Academy",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-10",
+        "a": "fnatic",
+        "b": "Metizport",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-10-10",
+        "a": "Aurora",
+        "b": "Zero Tenacity",
+        "score_a": 2,
+        "score_b": 1
+      }
+    ]
+  },
+  {
+    "series": 15,
+    "start": "2024-12-03",
+    "end": "2024-12-15",
+    "source": "https://www.hltv.org/events/8172/cct-season-2-europe-series-15",
+    "results": "https://www.hltv.org/results?event=8172",
+    "matches": [
+      {
+        "date": "2024-12-15",
+        "a": "ECSTATIC",
+        "b": "Spirit Academy",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-15",
+        "a": "ENCE",
+        "b": "Spirit Academy",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-15",
+        "a": "ECSTATIC",
+        "b": "9INE",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-12-14",
+        "a": "ENCE",
+        "b": "AMKAL",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-12-14",
+        "a": "Metizport",
+        "b": "9INE",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-14",
+        "a": "ECSTATIC",
+        "b": "Zero Tenacity",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-12-14",
+        "a": "Spirit Academy",
+        "b": "Aurora Young Blud",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-12-13",
+        "a": "AMKAL",
+        "b": "Into the Breach",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-12-13",
+        "a": "ALTERNATE aTTaX",
+        "b": "9INE",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-13",
+        "a": "Monte",
+        "b": "Metizport",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-13",
+        "a": "SINNERS",
+        "b": "Spirit Academy",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-12",
+        "a": "Zero Tenacity",
+        "b": "DMS",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2024-12-12",
+        "a": "GUN5",
+        "b": "Aurora Young Blud",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2024-12-12",
+        "a": "ENCE",
+        "b": "Endpoint",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2024-12-12",
+        "a": "B8",
+        "b": "ECSTATIC",
+        "score_a": 1,
+        "score_b": 2
+      }
+    ]
+  },
+  {
+    "series": 17,
+    "start": "2025-02-01",
+    "end": "2025-02-15",
+    "source": "https://www.hltv.org/events/8313/cct-season-2-europe-series-17",
+    "results": "https://www.hltv.org/results?event=8313",
+    "matches": [
+      {
+        "date": "2025-02-15",
+        "a": "500",
+        "b": "Partizan",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-15",
+        "a": "Partizan",
+        "b": "ENCE",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-15",
+        "a": "500",
+        "b": "B8",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-14",
+        "a": "ENCE",
+        "b": "Passion UA",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-14",
+        "a": "Nemiga",
+        "b": "B8",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-14",
+        "a": "ECLOT",
+        "b": "500",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-14",
+        "a": "Nexus",
+        "b": "Partizan",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-13",
+        "a": "9 Pandas",
+        "b": "500",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-13",
+        "a": "Passion UA",
+        "b": "Betclic",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-13",
+        "a": "Nexus",
+        "b": "Fire Flux",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-13",
+        "a": "Nemiga",
+        "b": "Sashi",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-12",
+        "a": "ECLOT",
+        "b": "Spirit Academy",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-12",
+        "a": "ENCE",
+        "b": "Alliance",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-12",
+        "a": "GUN5",
+        "b": "B8",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-12",
+        "a": "Partizan",
+        "b": "fnatic",
+        "score_a": 2,
+        "score_b": 0
+      }
+    ]
+  },
+  {
+    "series": 18,
+    "start": "2025-02-10",
+    "end": "2025-02-23",
+    "source": "https://www.hltv.org/events/8345/cct-season-2-europe-series-18",
+    "results": "https://egamersworld.com/counterstrike/event/cct-season-2-european-series-18-Ac1sPMPx6l",
+    "matches": [
+      {
+        "date": "2025-02-23",
+        "a": "B8",
+        "b": "BC.Game",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-23",
+        "a": "BC.Game",
+        "b": "NAVI Junior",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-23",
+        "a": "B8",
+        "b": "9 Pandas",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-22",
+        "a": "NAVI Junior",
+        "b": "GUN5",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-22",
+        "a": "CYBERSHOKE",
+        "b": "B8",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-22",
+        "a": "BC.Game",
+        "b": "Partizan",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-22",
+        "a": "9 Pandas",
+        "b": "ECLOT",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-21",
+        "a": "Partizan",
+        "b": "9INE",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-21",
+        "a": "Passion UA",
+        "b": "GUN5",
+        "score_a": 1,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-21",
+        "a": "Nemiga",
+        "b": "CYBERSHOKE",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-21",
+        "a": "ENCE",
+        "b": "NAVI Junior",
+        "score_a": 0,
+        "score_b": 2
+      },
+      {
+        "date": "2025-02-20",
+        "a": "B8",
+        "b": "Monte",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-20",
+        "a": "ECLOT",
+        "b": "fnatic",
+        "score_a": 2,
+        "score_b": 1
+      },
+      {
+        "date": "2025-02-20",
+        "a": "9 Pandas",
+        "b": "Sashi",
+        "score_a": 2,
+        "score_b": 0
+      },
+      {
+        "date": "2025-02-20",
+        "a": "Nexus",
+        "b": "BC.Game",
+        "score_a": 1,
+        "score_b": 2
+      }
+    ]
+  }
+]

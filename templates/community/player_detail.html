@@ -4,7 +4,7 @@
 <h1>{{ player.nickname }}</h1>
 <p class="muted">{{ player.position|default:'Позиция не указана' }}{% if player.game_id %} · {{ player.game_id }}{% endif %}</p>
 </div>
-</div>{% if user.pk == player.pk %}<a class="button secondary" href="{% url 'profile_edit' %}">Редактировать профиль</a>{% endif %}</div>{% include 'includes/stats.html' %}<section class="section">
+</div>{% if user.pk == player.pk %}<a class="button secondary" href="{% url 'profile_edit' %}">Редактировать профиль</a>{% endif %}</div>{% if is_archive %}<div class="notice">Статистика по добавленным матчам CCT.</div>{% endif %}{% include 'includes/stats.html' %}<section class="section">
 <div class="section-heading">
 <h2>Команды</h2>
 </div>

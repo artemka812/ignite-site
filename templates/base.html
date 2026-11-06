@@ -34,7 +34,7 @@
 <div class="container footer-inner">
 <a href="{% url 'home' %}" class="brand">IGNITE</a>
 <span>Турниры и всё, что вокруг игры.</span>
-<a href="{% url 'match_list' %}?status=finished">Архив матчей</a>{% if user.is_staff %}<a href="{% url 'admin:index' %}">Администрирование</a>{% endif %}<span class="timezone">Время — МСК</span>
+<a href="{% url 'match_list' %}?status=finished">Завершённые матчи</a>{% if user.is_staff %}<a href="{% url 'admin:index' %}">Администрирование</a>{% endif %}<span class="timezone">Время — МСК</span>
 </div>
 </footer>
 </body>

@@ -73,7 +73,7 @@ class MatchEditForm(forms.Form):
 class StreamForm(forms.ModelForm):
     class Meta:
         model = Stream
-        fields = ("platform", "url", "status")
+        fields = ("title", "platform", "url", "status")
 
 
 class PairingForm(forms.Form):

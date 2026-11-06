@@ -4,7 +4,7 @@
 <section class="match-heading-panel" data-match-state="{% url 'match_state' match.pk %}">
 <div class="section-heading">
 <span class="badge {{ match.status }}" data-live-status>{{ match.get_status_display }}</span>
-<span class="subtle">BO{{ match.best_of }} · {{ match.scheduled_at|date:'d.m.Y H:i'|default:'Время не назначено' }} МСК</span>
+<span class="subtle">BO{{ match.best_of }} · {% include 'includes/match_date.html' with match=match %}</span>
 </div>
 <div class="scoreboard">
 <div>
@@ -18,6 +18,22 @@
 <a class="button" href="{% url 'match_edit' match.pk %}">Изменить время и счёт</a>
 <a class="button secondary" href="{% url 'match_stream_add' match.pk %}">Добавить трансляцию</a>
 </div>{% endif %}</section>
+{% if match.source_url %}<div class="notice"><a href="{{ match.source_url }}" target="_blank" rel="noopener noreferrer">Источник результата ↗</a></div>{% endif %}
+{% if rosters %}
+<section class="section">
+  <div class="section-heading"><h2>Составы на матч</h2></div>
+  <div class="simple-grid">
+    {% for roster in rosters %}
+    <article class="panel">
+      <h3>{{ roster.team.name }}</h3>
+      {% for player in roster.players %}
+      <p><a href="{{ player.get_absolute_url }}">{{ player.nickname }}</a>{% if player.position %} <span class="muted">· {{ player.position }}</span>{% endif %}</p>
+      {% endfor %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 {% if can_confirm %}<section class="section">
 <div class="section-heading">
 <h2>Подтверждение результата</h2>
@@ -32,12 +48,12 @@
 <h2>Трансляции</h2>
 </div>{% for item in streams %}<article class="panel stream-panel">
 <div class="section-heading">
-<h3>{{ item.stream.get_platform_display }} <span class="badge {{ item.stream.status }}">{{ item.stream.get_status_display }}</span>
+<h3>{{ item.stream.title|default:item.stream.get_platform_display }} <span class="badge {{ item.stream.status }}">{{ item.stream.get_status_display }}</span>
 </h3>{% if can_manage %}<a href="{% url 'stream_edit' item.stream.pk %}">Изменить</a>{% endif %}</div>{% if item.embed_url %}<div class="video-frame {% if item.stream.platform == 'twitch' %}twitch-frame{% endif %}">
 <iframe src="{{ item.embed_url }}" title="Трансляция {{ match.tournament.name }}" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin">
 </iframe>
 </div>{% endif %}<a href="{{ item.stream.url }}" target="_blank" rel="noopener noreferrer" class="external-stream">Открыть на {{ item.stream.get_platform_display }} ↗</a>
-<p class="help">Если плеер недоступен или видео ограничено автором, откройте трансляцию по ссылке.</p>
+<p class="help">{% if not item.stream.embed_allowed %}Автор разрешает просмотр этого видео только на YouTube.{% else %}Если плеер недоступен или видео ограничено автором, откройте трансляцию по ссылке.{% endif %}</p>
 </article>{% empty %}<div class="empty">
 <p>Трансляция пока не добавлена.</p>
 </div>{% endfor %}</section>

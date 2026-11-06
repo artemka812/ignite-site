@@ -79,6 +79,7 @@ class Team(models.Model):
     captain = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="captained_teams", verbose_name="капитан")
     logo = models.URLField("ссылка на логотип", blank=True)
     contacts = models.CharField("контакты", max_length=200, blank=True)
+    archive_note = models.TextField("примечание к архивному составу", blank=True)
     color = models.CharField("цвет", max_length=10, choices=Color.choices, default=Color.LIME)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL, through="TeamMember", related_name="teams", verbose_name="игроки")
 
@@ -140,6 +141,7 @@ class Tournament(models.Model):
     name = models.CharField("название", max_length=120)
     slug = models.SlugField("адрес страницы", unique=True)
     subtitle = models.CharField("подзаголовок", max_length=180, blank=True)
+    source_url = models.URLField("источник архивных данных", blank=True)
     description = models.TextField("описание", blank=True)
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="organized_tournaments", verbose_name="организатор")
     game = models.CharField("дисциплина", max_length=10, choices=Game.choices)
@@ -222,6 +224,8 @@ class Match(models.Model):
     position = models.PositiveSmallIntegerField("номер в раунде", default=1, validators=[MinValueValidator(1)])
     best_of = models.PositiveSmallIntegerField("число карт (BO)", choices=[(1, "BO1"), (3, "BO3"), (5, "BO5")], default=3)
     scheduled_at = models.DateTimeField("время матча", null=True, blank=True)
+    date_only = models.BooleanField("известна только дата", default=False)
+    source_url = models.URLField("источник результата и составов", blank=True)
     score_a = models.PositiveSmallIntegerField("счёт первой команды", null=True, blank=True)
     score_b = models.PositiveSmallIntegerField("счёт второй команды", null=True, blank=True)
     status = models.CharField("статус", max_length=10, choices=Status.choices, default=Status.PLANNED)
@@ -310,6 +314,8 @@ class Stream(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="streams", verbose_name="матч")
     platform = models.CharField("платформа", max_length=10, choices=Platform.choices)
     url = models.URLField("ссылка")
+    title = models.CharField("название видео", max_length=180, blank=True)
+    embed_allowed = models.BooleanField("автор разрешает встраивание", default=True)
     status = models.CharField("статус", max_length=10, choices=Status.choices, default=Status.SOON)
 
     class Meta:
@@ -343,6 +349,8 @@ class Stream(models.Model):
             raise ValidationError({"url": "Укажите HTTPS-ссылку на видео YouTube, канал или запись Twitch."})
 
     def embed_url(self, host="localhost"):
+        if not self.embed_allowed:
+            return ""
         video = self._video()
         if not video:
             return ""

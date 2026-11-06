@@ -98,6 +98,7 @@ def player_detail(request, pk):
     player = get_object_or_404(User, pk=pk, is_active=True)
     return render(request, "community/player_detail.html", {
         "player": player, "statistics": services.player_statistics(player),
+        "is_archive": player.email.endswith("@archive.ignite.invalid"),
         "memberships": player.memberships.filter(status=TeamMember.Status.ACTIVE).select_related("team"),
         "matches": player_matches(player).exclude(tournament__status=Tournament.Status.DRAFT).select_related("team_a", "team_b", "tournament"),
     })
@@ -171,6 +172,8 @@ def team_action(request, pk):
     try:
         with transaction.atomic():
             team = get_object_or_404(Team.objects.select_for_update(), pk=pk)
+            if team.archive_note:
+                raise ValidationError("Это архивная команда. Заявки и изменения состава недоступны.")
             action = request.POST.get("action")
             management = {"invite", "approve", "reject", "remove", "transfer_captain"}
             personal = {"join", "accept_invite", "reject_invite", "leave"}

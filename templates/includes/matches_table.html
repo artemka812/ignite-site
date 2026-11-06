@@ -2,7 +2,7 @@
 <table>
 <thead>
 <tr>
-<th>Время · МСК</th>
+<th>Дата / время · МСК</th>
 <th>Матч</th>
 <th>Турнир</th>
 <th>Раунд</th>
@@ -11,7 +11,7 @@
 </tr>
 </thead>
 <tbody>{% for match in matches %}<tr>
-<td class="nowrap">{% if match.scheduled_at %}{{ match.scheduled_at|date:'d.m · H:i' }}{% else %}Не назначено{% endif %}</td>
+<td class="nowrap">{% if match.scheduled_at %}{% include 'includes/match_date.html' with match=match %}{% else %}Не назначено{% endif %}</td>
 <td>
 <a class="match-link" href="{{ match.get_absolute_url }}">{{ match.team_a.name|default:'Ожидается соперник' }} <span class="muted">—</span> {{ match.team_b.name|default:'Ожидается соперник' }}</a>
 </td>

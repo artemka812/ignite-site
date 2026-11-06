@@ -3,7 +3,7 @@
 <span class="art-grid">
 </span>
 <span class="game-mark">{% if t.game == 'CS2' %}CS<span>2</span>{% elif t.game == 'DOTA2' %}DOTA<span>2</span>{% else %}V<span>AL</span>{% endif %}</span>
-<span class="edition">SEASON {{ t.starts_at|date:'Y' }} / {{ t.edition }}</span>
+<span class="edition">{% if t.source_url %}CCT {{ t.starts_at|date:'Y' }}{% else %}SEASON {{ t.starts_at|date:'Y' }} / {{ t.edition }}{% endif %}</span>
 <span class="badge {{ t.status }}">{% if t.status == 'live' %}<i>
 </i>{% endif %}{{ t.get_status_display }}</span>
 </div>

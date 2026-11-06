@@ -14,8 +14,7 @@
 <span>{{ tournament.starts_at|date:'d.m.Y' }} — {{ tournament.ends_at|date:'d.m.Y' }}</span>
 <span>Команд: {{ entries|length }} / {{ tournament.team_limit }}</span>
 <span>{{ tournament.team_size }} × {{ tournament.team_size }}</span>
-<span>Организатор: <a href="{{ tournament.organizer.get_absolute_url }}">{{ tournament.organizer.nickname }}</a>
-</span>
+{% if tournament.source_url %}<span><a href="{{ tournament.source_url }}" target="_blank" rel="noopener noreferrer">Источник: HLTV ↗</a></span>{% else %}<span>Организатор: <a href="{{ tournament.organizer.get_absolute_url }}">{{ tournament.organizer.nickname }}</a></span>{% endif %}
 </div>
 <nav data-refresh-tournament class="section-tabs" aria-label="Разделы турнира">
 <a href="#bracket">Сетка</a>
@@ -93,7 +92,7 @@
 <span class="avatar">{{ entry.team.tag }}</span>
 <div>
 <h3>{{ entry.team.name }}</h3>
-<p>Капитан: {{ entry.team.captain.nickname }}</p>
+{% if not entry.team.archive_note %}<p>Капитан: {{ entry.team.captain.nickname }}</p>{% endif %}
 </div>
 </a>{% empty %}<p class="empty">Здесь появятся принятые команды.</p>{% endfor %}</div>
 </section>

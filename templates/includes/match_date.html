@@ -1,0 +1,1 @@
+{% if match.scheduled_at %}{% if match.date_only %}{{ match.scheduled_at|date:'d.m.Y' }} · без времени{% else %}{{ match.scheduled_at|date:'d.m · H:i' }}{% endif %}{% else %}Не назначено{% endif %}

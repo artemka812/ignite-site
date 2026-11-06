@@ -79,7 +79,7 @@
 <td>
 <a href="{{ match.get_absolute_url }}">{{ match.team_a.name|default:'Ожидается соперник' }} — {{ match.team_b.name|default:'Ожидается соперник' }}</a>
 </td>
-<td>{{ match.scheduled_at|date:'d.m H:i'|default:'Не назначено' }}</td>
+<td>{% include 'includes/match_date.html' with match=match %}</td>
 <td>
 <div class="actions">
 <a href="{% url 'match_edit' match.pk %}">Время и счёт</a>{% if tournament.format == 'single' and match.round == 1 %}{% if tournament.status == 'draft' or tournament.status == 'soon' %}<a href="{% url 'match_pair_edit' match.pk %}">Изменить пару</a>{% endif %}{% endif %}<a href="{% url 'match_stream_add' match.pk %}">Трансляция</a>

@@ -2,10 +2,9 @@
 <div class="identity">{% if team.logo %}<img class="avatar large" src="{{ team.logo }}" alt="Логотип {{ team.name }}" referrerpolicy="no-referrer">{% else %}<span class="avatar large">{{ team.tag }}</span>{% endif %}<div>
 <p class="eyebrow">Команда</p>
 <h1>{{ team.name }}</h1>
-<p class="muted">Капитан: <a href="{{ team.captain.get_absolute_url }}">{{ team.captain.nickname }}</a>
-</p>
+{% if not team.archive_note %}<p class="muted">Капитан: <a href="{{ team.captain.get_absolute_url }}">{{ team.captain.nickname }}</a></p>{% endif %}
 </div>
-</div>{% if can_manage %}<a class="button secondary" href="{% url 'team_edit' team.pk %}">Настройки команды</a>{% elif user.is_authenticated %}<form method="post" action="{% url 'team_action' team.pk %}">{% csrf_token %}{% if not membership or membership.status == 'left' or membership.status == 'rejected' %}<button name="action" value="join" class="button">Вступить в команду</button>{% elif membership.status == 'invited' %}<button name="action" value="accept_invite" class="button">Принять приглашение</button>{% elif membership.status == 'active' %}<button name="action" value="leave" class="button secondary">Покинуть команду</button>{% else %}<span class="badge">Заявка на рассмотрении</span>{% endif %}</form>{% endif %}</div>{% include 'includes/stats.html' %}{% if team.contacts %}<p class="muted">Контакты: {{ team.contacts }}</p>{% endif %}
+</div>{% if can_manage %}<a class="button secondary" href="{% url 'team_edit' team.pk %}">Настройки команды</a>{% elif user.is_authenticated and not team.archive_note %}<form method="post" action="{% url 'team_action' team.pk %}">{% csrf_token %}{% if not membership or membership.status == 'left' or membership.status == 'rejected' %}<button name="action" value="join" class="button">Вступить в команду</button>{% elif membership.status == 'invited' %}<button name="action" value="accept_invite" class="button">Принять приглашение</button>{% elif membership.status == 'active' %}<button name="action" value="leave" class="button secondary">Покинуть команду</button>{% else %}<span class="badge">Заявка на рассмотрении</span>{% endif %}</form>{% endif %}</div>{% if team.archive_note %}<div class="notice">Состав и результаты по добавленным матчам CCT.</div>{% endif %}{% include 'includes/stats.html' %}{% if team.contacts %}<p class="muted">Контакты: {{ team.contacts }}</p>{% endif %}
 <section class="section">
 <div class="section-heading">
 <h2>Состав</h2>
@@ -23,7 +22,7 @@
 <td>
 <a href="{{ member.player.get_absolute_url }}">{{ member.player.nickname }}</a>{% if member.player_id == team.captain_id %} <span class="subtle">Капитан</span>{% endif %}</td>
 <td>{{ member.player.position|default:'—' }}</td>
-<td>{{ member.joined_at|date:'d.m.Y' }}</td>{% if can_manage %}<td>{% if member.player_id != team.captain_id %}<form method="post" action="{% url 'team_action' team.pk %}" class="inline-form">{% csrf_token %}<input type="hidden" name="member_id" value="{{ member.pk }}">
+<td>{{ member.joined_at|date:'d.m.Y'|default:'Не указано' }}</td>{% if can_manage %}<td>{% if member.player_id != team.captain_id %}<form method="post" action="{% url 'team_action' team.pk %}" class="inline-form">{% csrf_token %}<input type="hidden" name="member_id" value="{{ member.pk }}">
 <button class="link-button" name="action" value="transfer_captain">Передать капитанство</button>
 <button class="link-button danger" name="action" value="remove">Исключить</button>
 </form>{% else %}—{% endif %}</td>{% endif %}</tr>{% empty %}<tr>
